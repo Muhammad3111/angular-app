@@ -1,0 +1,40 @@
+{
+  "id": "UUID",
+  "region": "Toshkent",
+  "totalIncome": [
+    {
+      "id": 1,
+      "currency": {
+        "code": "UZS",
+        "name": "Uzbek Som"
+      },
+      "balance": 1000000
+    },
+    {
+      "id": 2,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar"
+      },
+      "balance": 100
+    }
+  ],
+  "totalExpense": [
+    {
+      "id": 1,
+      "currency": {
+        "code": "UZS",
+        "name": "Uzbek Som"
+      },
+      "balance": 1000000
+    },
+    {
+      "id": 2,
+      "currency": {
+        "code": "USD",
+        "name": "US Dollar"
+      },
+      "balance": 100
+    }
+  ]
+}

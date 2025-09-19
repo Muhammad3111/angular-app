@@ -1,0 +1,122 @@
+@if (loading$ | async) {
+<div>Loading...</div>
+}
+
+<div class="flex flex-col gap-4">
+  <h1 class="text-2xl font-bold">Statistika</h1>
+  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+    <h1 class="col-span-full text-xl font-semibold">Umumiy balanclar</h1>
+    @if (analyticsLoading$ | async) {
+    <div class="col-span-full">Statistikalar yuklanmoqda</div>
+    } @else { @if (analytics$ | async; as g) {
+    <!-- Income -->
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-green-600 font-medium">Kirim (UZS)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalIncomeUzs | money : 'UZS' }}</div>
+    </div>
+
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-green-600 font-medium">Kirim (USD)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalIncomeUsd | money : 'USD' }}</div>
+    </div>
+
+    <!-- Expense -->
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-red-600 font-medium">Chiqim (UZS)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalExpenseUzs | money : 'UZS' }}</div>
+    </div>
+
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-red-600 font-medium">Chiqim (USD)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalExpenseUsd | money : 'USD' }}</div>
+    </div>
+
+    <!-- Balance -->
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-blue-600 font-medium">Balans (UZS)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalBalanceUzs | money : 'UZS' }}</div>
+    </div>
+
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
+      <h2 class="text-blue-600 font-medium">Balans (USD)</h2>
+      <div class="text-2xl font-semibold">{{ g.totalBalanceUsd | money : 'USD' }}</div>
+    </div>
+    } @else {
+    <div class="col-span-full text-gray-500">Ma’lumot topilmadi</div>
+    } }
+  </div>
+  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+    @for (region of regions$ | async; track region.id) {
+    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-4">
+      <!-- Region Name -->
+      <h1 class="text-2xl font-semibold">{{ region.name }}</h1>
+
+      <!-- Income -->
+      <div class="flex flex-col">
+        <h2 class="text-lg font-medium text-green-600 mb-2">
+          Kirim
+          <span class="text-xs text-gray-400">(UZS ≥ 1mln → ÷1000)</span>
+        </h2>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between text-lg py-1">
+            <span>UZS:</span>
+            <span class="font-semibold">
+              {{ region.balanceIncomeUzs | money : 'UZS' }}
+            </span>
+          </div>
+          <div class="flex justify-between text-lg py-1">
+            <span>USD:</span>
+            <span class="font-semibold">
+              {{ region.balanceIncomeUsd | money : 'USD' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ajratuvchi chiziq -->
+      <div class="border-t border-gray-200"></div>
+
+      <!-- Expense -->
+      <div class="flex flex-col">
+        <h2 class="text-lg font-medium text-red-600 mb-2">Chiqim</h2>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between text-lg py-1">
+            <span>UZS:</span>
+            <span class="font-semibold">
+              {{ region.balanceExpenseUzs | money : 'UZS' }}
+            </span>
+          </div>
+          <div class="flex justify-between text-lg py-1">
+            <span>USD:</span>
+            <span class="font-semibold">
+              {{ region.balanceExpenseUsd | money : 'USD' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ajratuvchi chiziq -->
+      <div class="border-t border-gray-200"></div>
+
+      <!-- Umumiy balans -->
+      <div class="flex flex-col">
+        <h2 class="text-lg font-medium text-blue-600 mb-2">Umumiy Balans</h2>
+        <div class="flex flex-col gap-2">
+          <div class="flex justify-between text-lg py-1">
+            <span>UZS:</span>
+            <span class="font-semibold">
+              {{ region.balanceUzs | money : 'UZS' }}
+            </span>
+          </div>
+          <div class="flex justify-between text-lg py-1">
+            <span>USD:</span>
+            <span class="font-semibold">
+              {{ region.balanceUsd | money : 'USD' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,149 @@
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold">Buyurtmalar tarixi</h1>
+
+  <div class="flex gap-2 items-center">
+    <!-- Qidiruv (3s debounce reactive form) -->
+    <input
+      type="text"
+      class="border rounded px-3 py-2 w-64"
+      placeholder="Qidirish (telefon, region...)"
+      [formControl]="searchCtrl"
+    />
+
+    <!-- Sana: dan -->
+    <input
+      type="date"
+      class="border rounded px-3 py-2"
+      [value]="fromDate"
+      (change)="onFromDate($any($event.target).value)"
+    />
+
+    <!-- Sana: gacha -->
+    <input
+      type="date"
+      class="border rounded px-3 py-2"
+      [value]="toDate"
+      (change)="onToDate($any($event.target).value)"
+    />
+  </div>
+</div>
+
+@if (loading$ | async) {
+<div class="py-8 text-gray-600">Yuklanmoqda...</div>
+} @else if (error$ | async) {
+<div class="py-8 text-red-600">{{ error$ | async }}</div>
+} @else { @let list = (orders$ | async) ?? [];
+
+<div class="overflow-x-auto border rounded">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-100 text-left">
+      <tr>
+        <th class="px-4 py-2">Sana</th>
+        <th class="px-4 py-2">Telefon</th>
+        <th class="px-4 py-2">Chiqim (from)</th>
+        <th class="px-4 py-2">Kirim (to)</th>
+        <th class="px-4 py-2">UZS (in/out)</th>
+        <th class="px-4 py-2">USD (in/out)</th>
+        <th class="px-4 py-2">Flow UZS</th>
+        <th class="px-4 py-2">Flow USD</th>
+        <th class="px-4 py-2 text-right">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (o of list; track o.id) {
+      <tr class="border-t">
+        <td class="px-4 py-2 whitespace-nowrap">
+          {{ o.created_at | date : 'yyyy-MM-dd HH:mm' }}
+        </td>
+        <td class="px-4 py-2">{{ o.phone }}</td>
+        <td class="px-4 py-2">{{ fromName(o) }}</td>
+        <td class="px-4 py-2">{{ toName(o) }}</td>
+
+        <td class="px-4 py-2">
+          <div class="flex flex-col leading-5">
+            <span class="text-green-700">+ {{ o.incomeUzs | money : 'UZS' }}</span>
+            <span class="text-red-700">− {{ o.expenseUzs | money : 'UZS' }}</span>
+          </div>
+        </td>
+
+        <td class="px-4 py-2">
+          <div class="flex flex-col leading-5">
+            <span class="text-green-700">+ {{ o.incomeUsd | money : 'USD' }}</span>
+            <span class="text-red-700">− {{ o.expenseUsd | money : 'USD' }}</span>
+          </div>
+        </td>
+
+        <td class="px-4 py-2">
+          <span [ngClass]="flowClass(o.flowBalanceUzs)">{{
+            o.flowBalanceUzs | money : 'UZS'
+          }}</span>
+        </td>
+
+        <td class="px-4 py-2">
+          <span [ngClass]="flowClass(o.flowBalanceUsd)">{{
+            o.flowBalanceUsd | money : 'USD'
+          }}</span>
+        </td>
+
+        <td class="px-4 py-2 text-right">
+          <button
+            class="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
+            (click)="openDelete(o.id)"
+          >
+            O‘chirish
+          </button>
+        </td>
+      </tr>
+      } @if (list.length === 0) {
+      <tr class="border-t">
+        <td colspan="9" class="px-4 py-6 text-center text-gray-500">Ma'lumot topilmadi</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination -->
+<div class="flex items-center justify-between mt-4">
+  <div class="text-sm text-gray-600">Sahifa: {{ page }} • Sahifadagi limit: {{ limit }}</div>
+  <div class="flex gap-2">
+    <button
+      class="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
+      [disabled]="page === 1"
+      (click)="prev()"
+    >
+      Oldingi
+    </button>
+    <button
+      class="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
+      [disabled]="list.length < limit"
+      (click)="next(list.length)"
+    >
+      Keyingi
+    </button>
+  </div>
+</div>
+}
+
+<!-- Delete confirm modal -->
+@if (showDeleteModal) {
+<div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-5">
+    <h3 class="text-lg font-semibold mb-2">O‘chirishni tasdiqlaysizmi?</h3>
+    <p class="text-sm text-gray-600 mb-4">
+      Ushbu buyurtma qayta tiklanmaydi. Davom etishni xohlaysizmi?
+    </p>
+    <div class="flex justify-end gap-2">
+      <button class="px-3 py-2 border rounded hover:bg-gray-100" (click)="closeDelete()">
+        Bekor qilish
+      </button>
+      <button
+        class="px-3 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+        (click)="confirmDelete()"
+      >
+        O‘chirish
+      </button>
+    </div>
+  </div>
+</div>
+}

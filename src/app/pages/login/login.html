@@ -1,0 +1,143 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+  <!-- Kartaning balandligini shunday animatsiya qilamiz -->
+  <div
+    #card
+    class="w-full max-w-xl bg-white border-2 border-gray-300 shadow-lg rounded-xl overflow-hidden"
+    [style.height.px]="cardHeight"
+    [style.transition]="'height 2000ms ease-in-out'"
+    (transitionend)="onHeightTransitionEnd()"
+  >
+    <!-- Ichki kontent (natural 'auto' balandlikni o'lchash uchun) -->
+    <div #cardInner>
+      <!-- Tabs -->
+      <div class="flex">
+        <button
+          (click)="switchTab('signin')"
+          class="w-1/2 py-3 text-center font-medium rounded-t-xl transition-all cursor-pointer"
+          [class.text-blue-600]="activeTab === 'signin'"
+          [class.border-b-2]="activeTab === 'signin'"
+          [class.border-blue-600]="activeTab === 'signin'"
+        >
+          Kirish
+        </button>
+        <button
+          (click)="switchTab('signup')"
+          class="w-1/2 py-3 text-center font-medium rounded-t-xl transition-all cursor-pointer"
+          [class.text-blue-600]="activeTab === 'signup'"
+          [class.border-b-2]="activeTab === 'signup'"
+          [class.border-blue-600]="activeTab === 'signup'"
+        >
+          Ro'yxatdan o'tish
+        </button>
+      </div>
+
+      <!-- Formlar -->
+      <div class="p-6 md:p-8">
+        @if (activeTab === 'signin') {
+        <form (ngSubmit)="submitSignIn()" [formGroup]="signInForm">
+          <div class="flex flex-col gap-4">
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Telefon raqam</label>
+              <input
+                type="tel"
+                formControlName="phone"
+                autocomplete="tel"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
+                placeholder="+998 90 123 45 67"
+              />
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Parol</label>
+              <input
+                type="password"
+                formControlName="password"
+                autocomplete="current-password"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
+                placeholder="******"
+              />
+            </div>
+
+            <button
+              type="submit"
+              [disabled]="signInForm.invalid"
+              class="w-full bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Kirish
+            </button>
+          </div>
+        </form>
+        } @else {
+        <form (ngSubmit)="submitSignUp()" [formGroup]="signUpForm">
+          <div class="flex flex-col gap-4">
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Foydalanuvchi nomi</label>
+              <input
+                type="text"
+                formControlName="username"
+                autocomplete="username"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                placeholder="Muhammad"
+              />
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Telefon raqam</label>
+              <input
+                type="tel"
+                formControlName="phone"
+                autocomplete="tel"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                placeholder="+998 90 123 45 67"
+              />
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Parol</label>
+              <input
+                type="password"
+                formControlName="password"
+                autocomplete="new-password"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Lavozim</label>
+              <select
+                formControlName="role"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+              >
+                <option value="user">Foydalanuvchi</option>
+                <option value="admin">ADMIN</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block mb-1 text-sm text-gray-700">Secret Key</label>
+              <input
+                type="password"
+                formControlName="secretKey"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                placeholder="Your secret key"
+              />
+            </div>
+
+            <button
+              type="submit"
+              [disabled]="signUpForm.invalid"
+              class="w-full bg-green-500 hover:bg-green-600 text-white rounded-md px-4 py-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Ro'yxatdan o'tish
+            </button>
+          </div>
+        </form>
+        }
+      </div>
+      <!-- /Formlar -->
+    </div>
+    <!-- /#cardInner -->
+  </div>
+  <!-- /#card -->
+</div>

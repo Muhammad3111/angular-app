@@ -1,0 +1,221 @@
+<h1 class="text-2xl font-bold mb-4">Ish Stoli</h1>
+
+<!-- Toast -->
+@if (toast()) {
+<div
+  class="mb-3 px-4 py-2 rounded text-white"
+  [ngClass]="toast()?.type === 'success' ? 'bg-green-600' : 'bg-red-600'"
+>
+  {{ toast()!.text }}
+</div>
+} @if (loading$ | async) {
+<div>Loading...</div>
+} @else if (error$ | async) {
+<div class="text-red-600">{{ error$ | async }}</div>
+} @else {
+
+<!-- KIRIM QATORI -->
+<div class="mb-8">
+  <h2 class="text-xl font-semibold text-green-600 mb-3">Kirim</h2>
+
+  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+    @for (r of regions$ | async; track r.id) { @if (!selectedIncomeId() || selectedIncomeId() ===
+    r.id) {
+    <div class="shadow-lg p-4 border-2 border-gray-200 rounded-xl flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">{{ rName(r) }}</h3>
+
+        @if (selectedIncomeId() === r.id) {
+        <button
+          type="button"
+          class="text-base text-white px-2 py-1 rounded bg-red-500 hover:bg-red-600 cursor-pointer"
+          (click)="cancelIncome()"
+        >
+          Bekor qilish
+        </button>
+        } @else {
+        <button
+          type="button"
+          class="text-base px-2 py-1 rounded bg-green-500 text-white hover:bg-green-600 cursor-pointer"
+          (click)="selectIncomeRegion(r.id)"
+        >
+          Tanlash
+        </button>
+        }
+      </div>
+
+      <!-- Faqat kirim balanslari -->
+      <div class="text-lg shadow-lg border-2 border-gray-200 rounded-xl p-3 bg-gray-50">
+        <div class="font-medium text-green-700 mb-2">Kirim balanslari</div>
+        <div class="flex justify-between">
+          <span>UZS</span><span>{{ r.balanceIncomeUzs | money : 'UZS' }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>USD</span><span>{{ r.balanceIncomeUsd | money : 'USD' }}</span>
+        </div>
+      </div>
+
+      <!-- INPUTLAR: faqat kirim tanlanganda -->
+      @if (selectedIncomeId() === r.id) {
+
+      <!-- Phone: agar birinchi tanlov income bo‘lsa shu tomonda -->
+      @if (firstStep() === 'income') {
+      <div>
+        <input
+          type="tel"
+          inputmode="numeric"
+          placeholder="Telefon raqam"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          [formControl]="form.controls['phoneDisplay']"
+          (focus)="onPhoneFocus()"
+        />
+        @if (form.controls['phone'].touched && form.controls['phone'].invalid) {
+        <div class="text-red-500 text-xs mt-1">Telefon formati noto‘g‘ri</div>
+        }
+      </div>
+      }
+
+      <div class="flex gap-2">
+        <input
+          type="number"
+          placeholder="UZS"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          (input)="setIncomeUzs($any($event.target).value)"
+        />
+        <input
+          type="number"
+          placeholder="USD"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          (input)="setIncomeUsd($any($event.target).value)"
+        />
+      </div>
+
+      <!-- Ogohlantirishlar (global holat) -->
+      @if (usdStatus() === 'too_high') {
+      <div class="text-red-600 text-xs mt-1">USD tafovut juda katta</div>
+      } @else if (usdStatus() === 'too_low') {
+      <div class="text-amber-600 text-xs mt-1">USD tafovut kichkina</div>
+      } @if (uzsStatus() === 'too_low') {
+      <div class="text-red-600 text-xs">Chiqim UZS kirim UZSdan kichik bo‘la olmaydi</div>
+      } @else if (uzsStatus() === 'diff_too_big') {
+      <div class="text-red-600 text-xs">UZS tafovut 5 000 000 dan oshmasligi kerak</div>
+      } }
+    </div>
+    } }
+  </div>
+</div>
+
+<!-- CHIQIM QATORI -->
+<div class="mb-8">
+  <h2 class="text-xl font-semibold text-red-600 mb-3">Chiqim</h2>
+
+  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+    @for (r of regions$ | async; track r.id) { @if (!selectedExpenseId() || selectedExpenseId() ===
+    r.id) {
+    <div class="shadow-lg p-4 border-2 border-gray-200 rounded-xl flex flex-col gap-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-semibold">{{ rName(r) }}</h3>
+
+        @if (selectedExpenseId() === r.id) {
+        <button
+          type="button"
+          class="text-base px-2 py-1 text-white rounded bg-red-500 hover:bg-red-600 cursor-pointer"
+          (click)="cancelExpense()"
+        >
+          Bekor
+        </button>
+        } @else {
+        <button
+          type="button"
+          class="text-base px-2 py-1 rounded bg-red-500 text-white hover:bg-red-600 cursor-pointer"
+          (click)="selectExpenseRegion(r.id)"
+        >
+          Tanlash
+        </button>
+        }
+      </div>
+
+      <!-- Faqat chiqim balanslari -->
+      <div class="text-lg border-2 border-gray-200 shadow-lg rounded p-3 bg-gray-50">
+        <div class="font-medium text-red-700 mb-2">Chiqim balanslari</div>
+        <div class="flex justify-between">
+          <span>UZS</span><span>{{ r.balanceExpenseUzs | money : 'UZS' }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>USD</span><span>{{ r.balanceExpenseUsd | money : 'USD' }}</span>
+        </div>
+      </div>
+
+      <!-- INPUTLAR: faqat chiqim tanlanganda -->
+      @if (selectedExpenseId() === r.id) {
+
+      <!-- Phone: agar birinchi tanlov expense bo‘lsa shu tomonda -->
+      @if (firstStep() === 'expense') {
+      <div>
+        <input
+          type="tel"
+          inputmode="numeric"
+          placeholder="Telefon raqam"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          [formControl]="form.controls['phoneDisplay']"
+          (focus)="onPhoneFocus()"
+        />
+        @if (form.controls['phone'].touched && form.controls['phone'].invalid) {
+        <div class="text-red-500 text-xs mt-1">Telefon formati noto‘g‘ri</div>
+        }
+      </div>
+      }
+
+      <div class="flex gap-2">
+        <input
+          type="number"
+          placeholder="Expense UZS"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          (input)="setExpenseUzs($any($event.target).value)"
+        />
+        <input
+          type="number"
+          placeholder="Expense USD"
+          class="border-2 border-gray-300 rounded-md p-2 w-full placeholder:text-gray-400"
+          (input)="setExpenseUsd($any($event.target).value)"
+        />
+      </div>
+
+      <!-- Ogohlantirishlar (global holat) -->
+      @if (usdStatus() === 'too_high') {
+      <div class="text-red-600 text-xs mt-1">USD tafovut juda katta</div>
+      } @else if (usdStatus() === 'too_low') {
+      <div class="text-amber-600 text-xs mt-1">USD tafovut kichkina</div>
+      } @if (uzsStatus() === 'too_low') {
+      <div class="text-red-600 text-xs">Chiqim UZS kirim UZSdan kichik bo‘la olmaydi</div>
+      } @else if (uzsStatus() === 'diff_too_big') {
+      <div class="text-red-600 text-xs">UZS tafovut 5 000 000 dan oshmasligi kerak</div>
+      } }
+    </div>
+    } }
+  </div>
+</div>
+
+<!-- AKSIYALAR -->
+@if (showActions()) {
+<div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1">
+  <div class="flex items-center gap-4">
+    <button
+      type="button"
+      class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 w-full cursor-pointer"
+      (click)="resetAll()"
+    >
+      Bekor qilish
+    </button>
+
+    <button
+      type="button"
+      class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 w-full cursor-pointer"
+      (click)="submit()"
+      [disabled]="!canSubmit()"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+} }

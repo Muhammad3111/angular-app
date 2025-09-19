@@ -1,0 +1,46 @@
+<div
+  [ngClass]="collapsed ? 'w-20' : 'w-72'"
+  class="flex flex-col py-10 px-2 bg-gray-100 h-screen transition-all duration-300"
+>
+  <div class="logo mb-10 text-center">
+    <h1 *ngIf="!collapsed" class="text-3xl text-green-400 font-semibold">Xchange</h1>
+    <fa-icon *ngIf="collapsed" [icon]="faLeaf" class="text-4xl text-green-400"></fa-icon>
+  </div>
+
+  <ul class="flex flex-col list-none">
+    <li
+      routerLink="/home"
+      routerLinkActive="active-link"
+      class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
+    >
+      <fa-icon [icon]="faHouse"></fa-icon>
+      <span *ngIf="!collapsed">Bosh sahifa</span>
+    </li>
+
+    <li
+      routerLink="/dashboard"
+      routerLinkActive="active-link"
+      class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
+    >
+      <fa-icon [icon]="faGrip"></fa-icon>
+      <span *ngIf="!collapsed">Ish stoli</span>
+    </li>
+
+    <li
+      routerLink="/orders-history"
+      routerLinkActive="active-link"
+      class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
+    >
+      <fa-icon [icon]="faClipboard"></fa-icon>
+      <span *ngIf="!collapsed">Kirim-Chiqimlar</span>
+    </li>
+    <!-- <li
+      routerLink="/settings"
+      routerLinkActive="active-link"
+      class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
+    >
+      <fa-icon [icon]="faSettings"></fa-icon>
+      <span *ngIf="!collapsed">Sozlamalar</span>
+    </li> -->
+  </ul>
+</div>

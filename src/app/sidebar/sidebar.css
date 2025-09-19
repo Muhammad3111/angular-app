@@ -1,0 +1,5 @@
+.active-link {
+  background-color: oklch(62.7% 0.194 149.214);
+  color: white;
+  transition: all 0.3s ease;
+}
