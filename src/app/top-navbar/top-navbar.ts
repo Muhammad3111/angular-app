@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, HostListener, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleLeft, faCircleRight, faUser } from '@fortawesome/free-solid-svg-icons';
 import { SidebarService } from '../sidebar/sidebar.service';
@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { loadMe, logout } from '../store/auth/auth.actions';
 import { Observable } from 'rxjs';
 import { selectUsername, selectRole } from '../store/auth/auth.selector';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-top-navbar',
@@ -21,7 +22,8 @@ export class TopNavbar {
 
   sidebarService = inject(SidebarService);
   private store = inject(Store);
-
+  private router = inject(Router);
+  private host = inject<ElementRef<HTMLElement>>(ElementRef);
   dropdownOpen = false;
 
   username$: Observable<string | null> = this.store.select(selectUsername);
@@ -35,8 +37,18 @@ export class TopNavbar {
     this.dropdownOpen = !this.dropdownOpen;
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    if (!this.dropdownOpen) return;
+
+    const target = event.target as Node | null;
+    if (target && !this.host.nativeElement.contains(target)) {
+      this.dropdownOpen = false;
+    }
+  }
+
   goToProfile() {
-    console.log('Profilega o‘tildi');
+    this.router.navigate(['/profile']);
     this.dropdownOpen = false;
   }
 

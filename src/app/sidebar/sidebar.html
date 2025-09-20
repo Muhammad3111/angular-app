@@ -1,6 +1,6 @@
 <div
-  [ngClass]="collapsed ? 'w-20' : 'w-72'"
-  class="flex flex-col py-10 px-2 bg-gray-100 h-screen transition-all duration-300"
+  class="flex flex-col bg-gray-100 h-screen transition-all duration-300 overflow-hidden py-10"
+  [ngClass]="collapsed ? 'w-20 px-2' : 'w-72 px-6'"
 >
   <div class="logo mb-10 text-center">
     <h1 *ngIf="!collapsed" class="text-3xl text-green-400 font-semibold">Xchange</h1>
@@ -9,6 +9,7 @@
 
   <ul class="flex flex-col list-none">
     <li
+      *ngIf="(role$ | async) !== 'user'"
       routerLink="/home"
       routerLinkActive="active-link"
       class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
@@ -27,6 +28,7 @@
     </li>
 
     <li
+      *ngIf="(role$ | async) !== 'user'"
       routerLink="/orders-history"
       routerLinkActive="active-link"
       class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"

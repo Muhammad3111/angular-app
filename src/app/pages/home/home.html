@@ -2,121 +2,309 @@
 <div>Loading...</div>
 }
 
-<div class="flex flex-col gap-4">
-  <h1 class="text-2xl font-bold">Statistika</h1>
-  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
-    <h1 class="col-span-full text-xl font-semibold">Umumiy balanclar</h1>
-    @if (analyticsLoading$ | async) {
-    <div class="col-span-full">Statistikalar yuklanmoqda</div>
-    } @else { @if (analytics$ | async; as g) {
-    <!-- Income -->
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-green-600 font-medium">Kirim (UZS)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalIncomeUzs | money : 'UZS' }}</div>
+<div class="flex flex-col gap-8">
+  <section class="flex flex-col gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Statistika</h1>
+      <p class="text-sm text-gray-500 mt-1">Umumiy ko'rsatkichlar va foydani kuzatish.</p>
     </div>
+    <div class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h2 class="text-xl font-semibold text-gray-800">Umumiy balanclar</h2>
+        <span class="text-sm text-gray-500">Kirish va chiqishlar dinamikasi, foyda ko‘rsatkichlari</span>
+      </div>
 
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-green-600 font-medium">Kirim (USD)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalIncomeUsd | money : 'USD' }}</div>
-    </div>
+      @if (analyticsLoading$ | async) {
+      <div class="mt-6 text-gray-500">Statistikalar yuklanmoqda</div>
+      } @else { @if (analytics$ | async; as g) {
+      <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="p-4 border border-green-200 rounded-xl bg-green-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (UZS)</span>
+          <span class="text-2xl font-semibold text-green-700">{{ g.totalIncomeUzs | money : 'UZS' }}</span>
+        </div>
+        <div class="p-4 border border-red-200 rounded-xl bg-red-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (UZS)</span>
+          <span class="text-2xl font-semibold text-red-700">{{ g.totalExpenseUzs | money : 'UZS' }}</span>
+        </div>
+        <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (UZS)</span>
+          <span class="text-2xl font-semibold text-blue-700">{{ g.totalBalanceUzs | money : 'UZS' }}</span>
+        </div>
+        <div class="p-4 border border-indigo-200 rounded-xl bg-indigo-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">Foyda (UZS)</span>
+          <span class="text-2xl font-semibold text-indigo-700">{{ g.totalFlowBalanceUzs | money : 'UZS' }}</span>
+        </div>
+      </div>
 
-    <!-- Expense -->
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-red-600 font-medium">Chiqim (UZS)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalExpenseUzs | money : 'UZS' }}</div>
+      <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="p-4 border border-green-200 rounded-xl bg-green-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (USD)</span>
+          <span class="text-2xl font-semibold text-green-700">{{ g.totalIncomeUsd | money : 'USD' }}</span>
+        </div>
+        <div class="p-4 border border-red-200 rounded-xl bg-red-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (USD)</span>
+          <span class="text-2xl font-semibold text-red-700">{{ g.totalExpenseUsd | money : 'USD' }}</span>
+        </div>
+        <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (USD)</span>
+          <span class="text-2xl font-semibold text-blue-700">{{ g.totalBalanceUsd | money : 'USD' }}</span>
+        </div>
+        <div class="p-4 border border-indigo-200 rounded-xl bg-indigo-50 flex flex-col gap-1">
+          <span class="text-xs font-semibold tracking-wide text-indigo-600 uppercase">Foyda (USD)</span>
+          <span class="text-2xl font-semibold text-indigo-700">{{ g.totalFlowBalanceUsd | money : 'USD' }}</span>
+        </div>
+      </div>
+      } @else {
+      <div class="mt-6 text-gray-500">Ma’lumot topilmadi</div>
+      } }
     </div>
+  </section>
 
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-red-600 font-medium">Chiqim (USD)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalExpenseUsd | money : 'USD' }}</div>
+  <section class="flex flex-col gap-4">
+    <div class="flex items-center justify-between">
+      <h2 class="text-xl font-semibold text-gray-800">Viloyatlar bo'yicha balanslar</h2>
+      <span class="text-sm text-gray-500 hidden sm:block">Har bir viloyatning kirim, chiqim va umumiy balanslari</span>
     </div>
-
-    <!-- Balance -->
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-blue-600 font-medium">Balans (UZS)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalBalanceUzs | money : 'UZS' }}</div>
-    </div>
-
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-2">
-      <h2 class="text-blue-600 font-medium">Balans (USD)</h2>
-      <div class="text-2xl font-semibold">{{ g.totalBalanceUsd | money : 'USD' }}</div>
-    </div>
-    } @else {
-    <div class="col-span-full text-gray-500">Ma’lumot topilmadi</div>
-    } }
-  </div>
-  <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-4">
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
     @for (region of regions$ | async; track region.id) {
-    <div class="col-span-1 shadow p-4 border border-gray-300 rounded flex flex-col gap-4">
-      <!-- Region Name -->
-      <h1 class="text-2xl font-semibold">{{ region.name }}</h1>
-
-      <!-- Income -->
-      <div class="flex flex-col">
-        <h2 class="text-lg font-medium text-green-600 mb-2">
-          Kirim
-          <span class="text-xs text-gray-400">(UZS ≥ 1mln → ÷1000)</span>
-        </h2>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between text-lg py-1">
-            <span>UZS:</span>
-            <span class="font-semibold">
-              {{ region.balanceIncomeUzs | money : 'UZS' }}
-            </span>
+    <div class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6">
+      @if (editingRegionId() === region.id) {
+      <form
+        class="flex flex-col gap-6"
+        [formGroup]="editRegionForm"
+        (ngSubmit)="submitUpdateRegion(region.id)"
+      >
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex-1 flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-gray-500 uppercase">Viloyat nomi</label>
+            <input
+              type="text"
+              formControlName="name"
+              class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Viloyat nomi"
+              [disabled]="updatingRegion()"
+            />
+            @if (editRegionForm.controls.name.touched && editRegionForm.controls.name.invalid) {
+            <span class="text-xs text-red-500">Kamida 2 ta belgi kiriting</span>
+            }
           </div>
-          <div class="flex justify-between text-lg py-1">
-            <span>USD:</span>
-            <span class="font-semibold">
-              {{ region.balanceIncomeUsd | money : 'USD' }}
-            </span>
+          <button
+            type="button"
+            class="text-sm text-gray-500 hover:text-gray-700"
+            (click)="cancelEditRegion()"
+            [disabled]="updatingRegion()"
+          >
+            Bekor
+          </button>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (UZS)</label>
+            <input
+              type="number"
+              formControlName="balanceIncomeUzs"
+              class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (USD)</label>
+            <input
+              type="number"
+              formControlName="balanceIncomeUsd"
+              class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (UZS)</label>
+            <input
+              type="number"
+              formControlName="balanceExpenseUzs"
+              class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (USD)</label>
+            <input
+              type="number"
+              formControlName="balanceExpenseUsd"
+              class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (UZS)</label>
+            <input
+              type="number"
+              formControlName="balanceUzs"
+              class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (USD)</label>
+            <input
+              type="number"
+              formControlName="balanceUsd"
+              class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="0"
+              [disabled]="updatingRegion()"
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+            (click)="cancelEditRegion()"
+            [disabled]="updatingRegion()"
+          >
+            Bekor qilish
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition disabled:opacity-60"
+            [disabled]="updatingRegion()"
+          >
+            @if (updatingRegion()) { <span>Saqlanmoqda...</span> } @else { <span>Yangilash</span> }
+          </button>
+        </div>
+      </form>
+      } @else {
+      <div class="flex flex-col gap-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">{{ region.name }}</h3>
+            <p class="text-xs text-gray-500 hidden sm:block">Viloyat balanslari va oqimlari</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-semibold uppercase hidden sm:inline-flex">
+              Monitoring
+            </div>
+            <button
+              type="button"
+              class="p-2 rounded-full text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition"
+              (click)="startEditRegion(region)"
+            >
+              ✏️
+            </button>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="p-4 border border-green-200 rounded-xl bg-green-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (UZS)</span>
+            <span class="text-lg font-semibold text-green-700">{{ region.balanceIncomeUzs | money : 'UZS' }}</span>
+          </div>
+          <div class="p-4 border border-green-200 rounded-xl bg-green-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (USD)</span>
+            <span class="text-lg font-semibold text-green-700">{{ region.balanceIncomeUsd | money : 'USD' }}</span>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="p-4 border border-red-200 rounded-xl bg-red-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (UZS)</span>
+            <span class="text-lg font-semibold text-red-700">{{ region.balanceExpenseUzs | money : 'UZS' }}</span>
+          </div>
+          <div class="p-4 border border-red-200 rounded-xl bg-red-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (USD)</span>
+            <span class="text-lg font-semibold text-red-700">{{ region.balanceExpenseUsd | money : 'USD' }}</span>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (UZS)</span>
+            <span class="text-lg font-semibold text-blue-700">{{ region.balanceUzs | money : 'UZS' }}</span>
+          </div>
+          <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
+            <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (USD)</span>
+            <span class="text-lg font-semibold text-blue-700">{{ region.balanceUsd | money : 'USD' }}</span>
           </div>
         </div>
       </div>
-
-      <!-- Ajratuvchi chiziq -->
-      <div class="border-t border-gray-200"></div>
-
-      <!-- Expense -->
-      <div class="flex flex-col">
-        <h2 class="text-lg font-medium text-red-600 mb-2">Chiqim</h2>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between text-lg py-1">
-            <span>UZS:</span>
-            <span class="font-semibold">
-              {{ region.balanceExpenseUzs | money : 'UZS' }}
-            </span>
-          </div>
-          <div class="flex justify-between text-lg py-1">
-            <span>USD:</span>
-            <span class="font-semibold">
-              {{ region.balanceExpenseUsd | money : 'USD' }}
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ajratuvchi chiziq -->
-      <div class="border-t border-gray-200"></div>
-
-      <!-- Umumiy balans -->
-      <div class="flex flex-col">
-        <h2 class="text-lg font-medium text-blue-600 mb-2">Umumiy Balans</h2>
-        <div class="flex flex-col gap-2">
-          <div class="flex justify-between text-lg py-1">
-            <span>UZS:</span>
-            <span class="font-semibold">
-              {{ region.balanceUzs | money : 'UZS' }}
-            </span>
-          </div>
-          <div class="flex justify-between text-lg py-1">
-            <span>USD:</span>
-            <span class="font-semibold">
-              {{ region.balanceUsd | money : 'USD' }}
-            </span>
-          </div>
-        </div>
-      </div>
+      }
     </div>
     }
+      <button
+        type="button"
+        class="bg-white shadow-2xl rounded-3xl border-2 border-dashed border-indigo-200 p-6 flex flex-col items-center justify-center gap-3 text-indigo-600 hover:border-indigo-300 hover:text-indigo-700 transition"
+        (click)="openCreateRegionModal()"
+      >
+        <span class="text-4xl leading-none">＋</span>
+        <span class="text-sm font-semibold uppercase tracking-wide">Yangi viloyat qo'shish</span>
+      </button>
+    </div>
+  </section>
+</div>
+
+@if (isCreateModalOpen()) {
+<div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center px-4">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h3 class="text-xl font-semibold text-gray-900">Yangi viloyat qo'shish</h3>
+        <p class="text-sm text-gray-500 mt-1">Viloyat nomini kiriting va tasdiqlang.</p>
+      </div>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 text-xl leading-none"
+        (click)="closeCreateRegionModal()"
+        aria-label="Yopish"
+      >
+        ×
+      </button>
+    </div>
+
+    <form class="mt-6 flex flex-col gap-4" [formGroup]="createRegionForm" (ngSubmit)="submitCreateRegion()">
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Viloyat nomi</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          placeholder="Masalan, Toshkent viloyati"
+          [disabled]="creatingRegion()"
+        />
+        @if (createRegionForm.controls.name.touched && createRegionForm.controls.name.invalid) {
+        <span class="text-xs text-red-500">Viloyat nomi kamida 2 ta belgidan iborat bo'lishi kerak</span>
+        }
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <button
+          type="button"
+          class="px-4 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-100 transition"
+          (click)="closeCreateRegionModal()"
+          [disabled]="creatingRegion()"
+        >
+          Bekor qilish
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium transition disabled:opacity-60"
+          [disabled]="creatingRegion()"
+        >
+          @if (creatingRegion()) { <span>Yaratilmoqda...</span> } @else { <span>Qo'shish</span> }
+        </button>
+      </div>
+    </form>
   </div>
 </div>
+}

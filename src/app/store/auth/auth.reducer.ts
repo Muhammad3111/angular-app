@@ -8,6 +8,9 @@ import {
   refreshSuccess,
   logout,
   loadMeSuccess,
+  updateProfile,
+  updateProfileSuccess,
+  updateProfileFailure,
 } from './auth.actions';
 
 export interface AuthState {
@@ -18,6 +21,7 @@ export interface AuthState {
   username: string | null;
   phone: string | null;
   role: string | null;
+  secretKey: string | null;
 }
 
 const initialState: AuthState = {
@@ -28,6 +32,7 @@ const initialState: AuthState = {
   username: null,
   phone: null,
   role: null,
+  secretKey: null,
 };
 
 export const authReducer = createReducer(
@@ -39,20 +44,37 @@ export const authReducer = createReducer(
     error: null,
   })),
   on(loginFailure, (state, { error }) => ({ ...state, error })),
-  on(registerSuccess, (state) => ({ ...state, error: null })),
+  on(registerSuccess, (state, { access_token, refresh_token }) => ({
+    ...state,
+    access_token,
+    refresh_token,
+    error: null,
+  })),
   on(registerFailure, (state, { error }) => ({ ...state, error })),
   on(refreshSuccess, (state, { access_token }) => ({
     ...state,
     access_token,
     error: null,
   })),
-  on(loadMeSuccess, (state, { id, username, phone, role }) => ({
+  on(loadMeSuccess, (state, { id, username, phone, role, secretKey }) => ({
     ...state,
     id,
     username,
     phone,
     role,
+    secretKey,
     error: null,
   })),
+  on(updateProfile, (state) => ({ ...state, error: null })),
+  on(updateProfileSuccess, (state, { profile }) => ({
+    ...state,
+    id: profile.id,
+    username: profile.username,
+    phone: profile.phone,
+    role: profile.role,
+    secretKey: profile.secretKey,
+    error: null,
+  })),
+  on(updateProfileFailure, (state, { error }) => ({ ...state, error })),
   on(logout, () => initialState)
 );

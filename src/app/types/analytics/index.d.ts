@@ -5,4 +5,6 @@ declare type Analytics = {
   totalExpenseUsd: number;
   totalBalanceUzs: number;
   totalBalanceUsd: number;
+  totalFlowBalanceUzs: number;
+  totalFlowBalanceUsd: number;
 };

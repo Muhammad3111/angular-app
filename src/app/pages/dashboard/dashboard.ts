@@ -87,20 +87,11 @@ export class Dashboard implements OnInit {
     { initialValue: this.form.controls.phone.value ?? '' }
   );
 
-  // "Bo'sh emas" degani: "+998" prefiksidan keyin kamida 1 ta raqam bo'lsin
-  private phoneHasAnyDigit = computed(() => {
-    const v = (this.phoneValue() ?? '') as string;
-    return v.length > 4; // "+998" uzunligi 4, shundan keyin raqam kiritilishi shart
-  });
-
   // Ogohlantirish statuslari (submitga ta'sir qilmaydi)
   usdStatus = signal<'ok' | 'too_high' | 'too_low' | 'incomplete'>('incomplete');
   uzsStatus = signal<'ok' | 'too_low' | 'diff_too_big' | 'incomplete'>('incomplete');
 
   showActions = computed(() => !!this.fromRegionId() && !!this.toRegionId());
-
-  // ✅ Submit faqat ikkala region tanlangan VA telefon bo'sh bo'lmaganda aktiv
-  canSubmit = computed(() => this.showActions() && this.phoneHasAnyDigit());
 
   ngOnInit(): void {
     // Sahifa ochilganda regionlar
@@ -202,10 +193,42 @@ export class Dashboard implements OnInit {
     this.toRegionId.set(id);
   }
 
+  onIncomeCardKeydown(event: KeyboardEvent, id: string) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (this.selectedIncomeId() === id) {
+        this.cancelIncome();
+      } else {
+        this.selectIncomeRegion(id);
+      }
+    } else if (event.key === 'Escape') {
+      if (this.selectedIncomeId() === id) {
+        event.preventDefault();
+        this.cancelIncome();
+      }
+    }
+  }
+
   selectExpenseRegion(id: string) {
     this.selectedExpenseId.set(id);
     if (!this.firstStep()) this.firstStep.set('expense');
     this.fromRegionId.set(id);
+  }
+
+  onExpenseCardKeydown(event: KeyboardEvent, id: string) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (this.selectedExpenseId() === id) {
+        this.cancelExpense();
+      } else {
+        this.selectExpenseRegion(id);
+      }
+    } else if (event.key === 'Escape') {
+      if (this.selectedExpenseId() === id) {
+        event.preventDefault();
+        this.cancelExpense();
+      }
+    }
   }
 
   // —— Input handler’lar —— //
@@ -237,6 +260,7 @@ export class Dashboard implements OnInit {
     const id = this.selectedIncomeId();
     if (!id) return;
 
+    this.cancelExpense();
     this.selectedIncomeId.set(null);
     if (this.toRegionId() === id) this.toRegionId.set(null);
 
@@ -287,7 +311,7 @@ export class Dashboard implements OnInit {
 
   // —— Submit —— //
   submit() {
-    if (!this.showActions() || !this.canSubmit()) return;
+    if (!this.showActions()) return;
 
     const v = this.form.value;
 

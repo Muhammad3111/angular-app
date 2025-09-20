@@ -1,1 +1,152 @@
-<p>profile works!</p>
+<div class="max-w-2xl mx-auto">
+  <div class="bg-white shadow rounded-2xl p-6 sm:p-8 space-y-6">
+    <div class="flex items-start justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Profil ma'lumotlari</h1>
+        <p class="text-sm text-gray-500 mt-1">
+          Hisobingizdagi asosiy ma'lumotlarni ko'rish va tahrirlash.
+        </p>
+      </div>
+
+      <button
+        *ngIf="!editing"
+        type="button"
+        (click)="startEdit()"
+        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+      >
+        Tahrirlash
+      </button>
+    </div>
+
+    <ng-container *ngIf="profile as profileData">
+      <form
+        *ngIf="editing; else viewMode"
+        class="space-y-6"
+        [formGroup]="profileForm"
+        (ngSubmit)="submit()"
+      >
+        <div class="grid gap-5">
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-gray-700">Foydalanuvchi nomi</span>
+            <input
+              formControlName="username"
+              type="text"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </label>
+
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-gray-700">Telefon raqami</span>
+            <input
+              formControlName="phone"
+              type="tel"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </label>
+
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-gray-700">Rol</span>
+            <input
+              formControlName="role"
+              type="text"
+              class="w-full rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </label>
+
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-gray-700">Secret Key</span>
+            <div class="relative">
+              <input
+                formControlName="secretKey"
+                [type]="showSecretKey ? 'text' : 'password'"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Yangi secret key"
+              />
+              <button
+                type="button"
+                class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                (click)="showSecretKey = !showSecretKey"
+                aria-label="Secret keyni ko'rsatish"
+              >
+                <fa-icon [icon]="showSecretKey ? faEyeSlash : faEye"></fa-icon>
+              </button>
+            </div>
+            @if (profileForm.controls.secretKey.touched && profileForm.controls.secretKey.invalid) {
+            <span class="text-xs text-red-500">Secret key kamida 6 ta belgidan iborat bo'lishi kerak</span>
+            }
+          </label>
+
+          <label class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-gray-700">Yangi parol (ixtiyoriy)</span>
+            <div class="relative">
+              <input
+                formControlName="password"
+                [type]="showPassword ? 'text' : 'password'"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                placeholder="Yangi parol"
+              />
+              <button
+                type="button"
+                class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                (click)="showPassword = !showPassword"
+                aria-label="Parolni ko'rsatish"
+              >
+                <fa-icon [icon]="showPassword ? faEyeSlash : faEye"></fa-icon>
+              </button>
+            </div>
+            @if (profileForm.controls.password.touched && profileForm.controls.password.invalid) {
+            <span class="text-xs text-red-500">Parol kamida 6 ta belgidan iborat bo'lishi kerak</span>
+            }
+          </label>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-2">
+          <button
+            type="button"
+            (click)="cancelEdit()"
+            class="px-4 py-2 rounded-lg border bg-red-500 border-gray-300 text-sm font-medium text-white hover:bg-red-600 transition-colors cursor-pointer"
+          >
+            Bekor qilish
+          </button>
+
+          <button
+            type="submit"
+            class="px-4 py-2 rounded-lg bg-green-600 hover:bg-grren-700 text-white text-sm font-medium transition-colors cursor-pointer"
+          >
+            Junatish
+          </button>
+        </div>
+      </form>
+
+      <ng-template #viewMode>
+        <dl class="grid gap-5">
+          <div class="border border-gray-200 rounded-lg p-4">
+            <dt class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Foydalanuvchi nomi
+            </dt>
+            <dd class="mt-2 text-lg text-gray-900">{{ profileData.username || '—' }}</dd>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <dt class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              Telefon raqami
+            </dt>
+            <dd class="mt-2 text-lg text-gray-900">{{ profileData.phone || '—' }}</dd>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <dt class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Rol</dt>
+            <dd class="mt-2 text-lg text-gray-900">{{ profileData.role || '—' }}</dd>
+          </div>
+
+          <div class="border border-gray-200 rounded-lg p-4">
+            <dt class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Secret Key</dt>
+            <dd class="mt-2 text-lg text-gray-900">
+              {{ profileData.secretKey || '—' }}
+            </dd>
+          </div>
+        </dl>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

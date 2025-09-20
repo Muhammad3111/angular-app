@@ -5,6 +5,8 @@ import { OrdersHistory } from './pages/orders-history/orders-history';
 import { Settings } from './pages/settings/settings';
 import { Login } from './pages/login/login';
 import { Layout } from './layout/layout';
+import { authChildGuard, authGuard, roleGuard } from './shared/guards/auth.guard';
+import { Profile } from './profile/profile';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -12,12 +14,35 @@ export const routes: Routes = [
   {
     path: '',
     component: Layout,
+    canActivate: [authGuard],
+    canActivateChild: [authChildGuard],
     children: [
       { path: '', redirectTo: 'home', pathMatch: 'full' }, // default child
-      { path: 'home', component: Home },
-      { path: 'dashboard', component: Dashboard },
-      { path: 'orders-history', component: OrdersHistory },
-      { path: 'settings', component: Settings },
+      { path: 'home', component: Home, canActivate: [roleGuard], data: { roles: ['admin'] } },
+      {
+        path: 'dashboard',
+        component: Dashboard,
+        canActivate: [roleGuard],
+        data: { roles: ['user', 'admin'] },
+      },
+      {
+        path: 'orders-history',
+        component: OrdersHistory,
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
+      },
+      {
+        path: 'settings',
+        component: Settings,
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
+      },
+      {
+        path: 'profile',
+        component: Profile,
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
+      },
     ],
   },
 

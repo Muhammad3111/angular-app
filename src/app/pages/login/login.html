@@ -45,17 +45,33 @@
                 class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
                 placeholder="+998 90 123 45 67"
               />
+              @if (signInForm.controls.phone.touched && signInForm.controls.phone.hasError('invalidPhone')) {
+              <span class="text-xs text-red-500">Telefon raqami to'liq kiritilishi kerak</span>
+              }
             </div>
 
             <div>
               <label class="block mb-1 text-sm text-gray-700">Parol</label>
-              <input
-                type="password"
-                formControlName="password"
-                autocomplete="current-password"
-                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
-                placeholder="******"
-              />
+              <div class="relative">
+                <input
+                  [type]="showSignInPassword() ? 'text' : 'password'"
+                  formControlName="password"
+                  autocomplete="current-password"
+                  class="w-full border-2 border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
+                  placeholder="******"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                  (click)="toggleSignInPassword()"
+                  aria-label="Parolni ko'rsatish"
+                >
+                  <fa-icon [icon]="showSignInPassword() ? faEyeSlash : faEye"></fa-icon>
+                </button>
+              </div>
+              @if (signInForm.controls.password.touched && signInForm.controls.password.invalid) {
+              <span class="text-xs text-red-500">Parol kamida 6 ta belgidan iborat bo'lishi kerak</span>
+              }
             </div>
 
             <button
@@ -76,7 +92,7 @@
                 type="text"
                 formControlName="username"
                 autocomplete="username"
-                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
                 placeholder="Muhammad"
               />
             </div>
@@ -87,20 +103,36 @@
                 type="tel"
                 formControlName="phone"
                 autocomplete="tel"
-                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
+                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
                 placeholder="+998 90 123 45 67"
               />
+              @if (signUpForm.controls.phone.touched && signUpForm.controls.phone.hasError('invalidPhone')) {
+              <span class="text-xs text-red-500">Telefon raqami to'liq kiritilishi kerak</span>
+              }
             </div>
 
             <div>
               <label class="block mb-1 text-sm text-gray-700">Parol</label>
-              <input
-                type="password"
-                formControlName="password"
-                autocomplete="new-password"
-                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
-                placeholder="••••••••"
-              />
+              <div class="relative">
+                <input
+                  [type]="showSignUpPassword() ? 'text' : 'password'"
+                  formControlName="password"
+                  autocomplete="new-password"
+                  class="w-full border-2 border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
+                  placeholder="••••••••"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                  (click)="toggleSignUpPassword()"
+                  aria-label="Parolni ko'rsatish"
+                >
+                  <fa-icon [icon]="showSignUpPassword() ? faEyeSlash : faEye"></fa-icon>
+                </button>
+              </div>
+              @if (signUpForm.controls.password.touched && signUpForm.controls.password.invalid) {
+              <span class="text-xs text-red-500">Parol kamida 6 ta belgidan iborat bo'lishi kerak</span>
+              }
             </div>
 
             <div>
@@ -116,12 +148,27 @@
 
             <div>
               <label class="block mb-1 text-sm text-gray-700">Secret Key</label>
-              <input
-                type="password"
-                formControlName="secretKey"
-                class="w-full border-2 border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-300"
-                placeholder="Your secret key"
-              />
+              <div class="relative">
+                <input
+                  [type]="showSignUpSecret() ? 'text' : 'password'"
+                  formControlName="secretKey"
+                  class="w-full border-2 border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 placeholder:text-gray-400"
+                  placeholder="Your secret key"
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                  (click)="toggleSignUpSecret()"
+                  aria-label="Secret keyni ko'rsatish"
+                >
+                  <fa-icon [icon]="showSignUpSecret() ? faEyeSlash : faEye"></fa-icon>
+                </button>
+              </div>
+              @if (signUpForm.controls.secretKey.touched && signUpForm.controls.secretKey.hasError('required')) {
+              <span class="text-xs text-red-500">Secret key majburiy</span>
+              } @else if (signUpForm.controls.secretKey.touched && signUpForm.controls.secretKey.hasError('minlength')) {
+              <span class="text-xs text-red-500">Secret key kamida 6 ta belgidan iborat bo'lishi kerak</span>
+              }
             </div>
 
             <button

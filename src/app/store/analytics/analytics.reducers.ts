@@ -17,6 +17,8 @@ export const initialState: AnalyticsState = {
     totalExpenseUzs: 0,
     totalIncomeUsd: 0,
     totalIncomeUzs: 0,
+    totalFlowBalanceUzs: 0,
+    totalFlowBalanceUsd: 0,
   },
   loading: false,
   error: null,
@@ -28,7 +30,10 @@ export const analyticsReducer = createReducer(
   on(AnalyticsActions.loadAnalyticsSuccess, (state, { analytics }) => ({
     ...state,
     loading: false,
-    analytics,
+    analytics: {
+      ...initialState.analytics,
+      ...analytics,
+    },
   })),
   on(AnalyticsActions.loadAnalyticsFailure, (state, { error }) => ({
     ...state,

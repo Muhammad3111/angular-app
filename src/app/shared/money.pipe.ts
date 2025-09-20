@@ -22,7 +22,8 @@ export class MoneyPipe implements PipeTransform {
       const cut = opts?.uzsCutThousands ?? true;
       // 1 mln va undan katta bo‘lsa 3 ta nolni “olib tashlash” (÷1000)
       if (cut && Math.abs(num) >= 1_000_000) {
-        return format(Math.trunc(num / 1000), 'uz-UZ'); // masalan 1 500 000 -> 1 500
+        const millions = format(Math.trunc(num / 1000), 'uz-UZ');
+        return `${millions} M`; // masalan 1 500 000 -> 1 500 M
       }
       return format(num, 'uz-UZ');
     }

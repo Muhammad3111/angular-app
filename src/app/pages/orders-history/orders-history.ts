@@ -45,6 +45,14 @@ export class OrdersHistory implements OnInit {
   loading$ = this.store.select(selectOrdersLoading);
   error$ = this.store.select(selectOrdersError);
 
+  get hasSearch(): boolean {
+    return !!this.searchCtrl.value?.trim();
+  }
+
+  get hasDateRange(): boolean {
+    return !!this.fromDate && !!this.toDate;
+  }
+
   ngOnInit(): void {
     this.fetch(); // initial
 
@@ -85,6 +93,9 @@ export class OrdersHistory implements OnInit {
     if (this.fromDate && this.toDate) {
       this.page = 1;
       this.fetch();
+    } else if (!this.fromDate && !this.toDate) {
+      this.page = 1;
+      this.fetch();
     }
   }
   onToDate(v: string) {
@@ -92,6 +103,38 @@ export class OrdersHistory implements OnInit {
     if (this.fromDate && this.toDate) {
       this.page = 1;
       this.fetch();
+    } else if (!this.fromDate && !this.toDate) {
+      this.page = 1;
+      this.fetch();
+    }
+  }
+
+  clearSearch() {
+    if (!this.hasSearch) return;
+    this.searchCtrl.setValue('', { emitEvent: false });
+    this.page = 1;
+    this.fetch();
+  }
+
+  onSearchKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.clearSearch();
+    }
+  }
+
+  clearDates() {
+    if (!this.hasDateRange) return;
+    this.fromDate = null;
+    this.toDate = null;
+    this.page = 1;
+    this.fetch();
+  }
+
+  onDateKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.clearDates();
     }
   }
 

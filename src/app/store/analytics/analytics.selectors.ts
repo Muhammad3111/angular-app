@@ -19,3 +19,11 @@ export const selectTotalExpenseUzs = createSelector(selectAnalytics, (a) => a.to
 export const selectTotalExpenseUsd = createSelector(selectAnalytics, (a) => a.totalExpenseUsd);
 export const selectTotalBalanceUzs = createSelector(selectAnalytics, (a) => a.totalBalanceUzs);
 export const selectTotalBalanceUsd = createSelector(selectAnalytics, (a) => a.totalBalanceUsd);
+export const selectTotalFlowBalanceUzs = createSelector(
+  selectAnalytics,
+  (a) => a.totalFlowBalanceUzs
+);
+export const selectTotalFlowBalanceUsd = createSelector(
+  selectAnalytics,
+  (a) => a.totalFlowBalanceUsd
+);

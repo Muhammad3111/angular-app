@@ -18,16 +18,8 @@
 
   <!-- User info + dropdown -->
   <div class="relative flex items-center gap-3">
-    <!-- User icon -->
-    <div
-      (click)="toggleDropdown()"
-      class="p-2 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-300 group transition-all duration-300"
-    >
-      <fa-icon [icon]="faUser" class="text-2xl group-hover:text-white"></fa-icon>
-    </div>
-
     <!-- Username + Role -->
-    <div class="flex flex-col leading-tight">
+    <div class="flex flex-col leading-tight text-right">
       <span class="font-semibold text-gray-800" *ngIf="username$ | async as username">
         {{ username }}
       </span>
@@ -36,12 +28,24 @@
       </span>
     </div>
 
+    <!-- User icon -->
+    <div
+      (click)="toggleDropdown()"
+      class="p-2 border border-gray-300 rounded-full cursor-pointer hover:bg-gray-300 group transition-all duration-300"
+    >
+      <fa-icon [icon]="faUser" class="text-2xl group-hover:text-white"></fa-icon>
+    </div>
+
     <!-- Dropdown menyu -->
     <div
       *ngIf="dropdownOpen"
       class="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg py-2 z-50"
     >
-      <button class="w-full text-left px-4 py-2 hover:bg-gray-100" (click)="goToProfile()">
+      <button
+        *ngIf="(role$ | async) !== 'user'"
+        class="w-full text-left px-4 py-2 hover:bg-gray-100"
+        (click)="goToProfile()"
+      >
         Profile
       </button>
       <button class="w-full text-left px-4 py-2 hover:bg-gray-100" (click)="logout()">
