@@ -7,7 +7,7 @@ import { catchError, map, mergeMap, of } from 'rxjs';
 export class RegionsEffects {
   private actions$ = inject(Actions);
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/regions';
+  private apiUrl = 'https://api.moneychange.uz/api/regions';
   // Load
   load$ = createEffect(() =>
     this.actions$.pipe(

@@ -10,7 +10,7 @@ export class OrdersEffects {
   private http = inject(HttpClient);
 
   // API root (o'zingiznikiga moslang)
-  private apiUrl = 'http://localhost:3000/api/orders';
+  private apiUrl = 'https://api.moneychange.uz/api/orders';
 
   /** Helper: query paramlarni qurish */
   private buildParams(params?: LoadOrdersParams): HttpParams {

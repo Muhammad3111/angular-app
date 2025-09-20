@@ -8,7 +8,7 @@ import { catchError, map, of, switchMap } from 'rxjs';
 export class AnalyticsEffects {
   private actions$ = inject(Actions);
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/analytics/global';
+  private apiUrl = 'https://api.moneychange.uz/api/analytics/global';
 
   load$ = createEffect(() =>
     this.actions$.pipe(

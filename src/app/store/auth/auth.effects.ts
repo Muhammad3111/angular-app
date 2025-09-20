@@ -34,7 +34,7 @@ export class AuthEffects {
   private store = inject(Store);
   private toast = inject(ToastService);
 
-  private baseUrl = 'http://localhost:3000';
+  private baseUrl = 'https://api.moneychange.uz';
 
   login$ = createEffect(() =>
     this.actions$.pipe(
@@ -82,7 +82,7 @@ export class AuthEffects {
         this.http.post<any>(`${this.baseUrl}/api/users/register`, dto).pipe(
           map((res) => {
             if (!res?.access_token || !res?.refresh_token) {
-              throw new Error('Token ma\'lumotlari topilmadi');
+              throw new Error("Token ma'lumotlari topilmadi");
             }
 
             return registerSuccess({
@@ -93,8 +93,7 @@ export class AuthEffects {
           catchError((err) =>
             of(
               registerFailure({
-                error:
-                  err?.error?.message || err?.message || 'Register failed',
+                error: err?.error?.message || err?.message || 'Register failed',
               })
             )
           )
@@ -185,7 +184,7 @@ export class AuthEffects {
             localStorage.setItem('refresh_token', refresh_token);
           }
 
-          this.toast.show('success', 'Ro\'yxatdan o\'tish muvaffaqiyatli yakunlandi');
+          this.toast.show('success', "Ro'yxatdan o'tish muvaffaqiyatli yakunlandi");
           this.router.navigate(['/home']);
         })
       ),
