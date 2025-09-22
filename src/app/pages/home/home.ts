@@ -28,6 +28,8 @@ export class Home implements OnInit {
   private actions$ = inject(Actions);
   private destroyRef = inject(DestroyRef);
   private toast = inject(ToastService);
+  showDeleteModal = false;
+  deleteId: string | null = null;
 
   regions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
@@ -78,7 +80,7 @@ export class Home implements OnInit {
       .pipe(ofType(RegionsActions.createRegionFailure), takeUntilDestroyed(this.destroyRef))
       .subscribe(({ error }) => {
         this.creatingRegion.set(false);
-        this.toast.show('error', error ?? 'Viloyat qo\'shib bo\'lmadi');
+        this.toast.show('error', error ?? "Viloyat qo'shib bo'lmadi");
       });
 
     this.actions$
@@ -107,6 +109,33 @@ export class Home implements OnInit {
         this.updatingRegion.set(false);
         this.toast.show('error', error ?? 'Viloyat yangilashda xatolik');
       });
+
+    this.actions$
+      .pipe(ofType(RegionsActions.deleteRegionSuccess), takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ id }) => {
+        this.closeDelete();
+        this.toast.show('success', `Viloyat o'chirildi`);
+      });
+
+    this.actions$
+      .pipe(ofType(RegionsActions.deleteRegionFailure), takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ error }) => {
+        this.closeDelete();
+        this.toast.show('error', error ?? "Viloyat o'chirishda xatolik");
+      });
+  }
+
+  openDelete(id: string) {
+    this.deleteId = id;
+    this.showDeleteModal = true;
+  }
+  closeDelete() {
+    this.showDeleteModal = false;
+    this.deleteId = null;
+  }
+  confirmDelete() {
+    if (!this.deleteId) return;
+    this.store.dispatch(RegionsActions.deleteRegion({ id: this.deleteId }));
   }
 
   openCreateRegionModal() {
