@@ -3,11 +3,12 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient } from '@angular/common/http';
 import * as RegionsActions from './region.action';
 import { catchError, map, mergeMap, of } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export class RegionsEffects {
   private actions$ = inject(Actions);
   private http = inject(HttpClient);
-  private apiUrl = 'https://api.moneychange.uz/api/regions';
+  private apiUrl = `${environment.apiUrl}/api/regions`;
   // Load
   load$ = createEffect(() =>
     this.actions$.pipe(

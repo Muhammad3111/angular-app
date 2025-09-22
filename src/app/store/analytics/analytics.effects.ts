@@ -3,12 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as AnalyticsActions from './analytics.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AnalyticsEffects {
   private actions$ = inject(Actions);
   private http = inject(HttpClient);
-  private apiUrl = 'https://api.moneychange.uz/api/analytics/global';
+  private apiUrl = `${environment.apiUrl}/api/analytics/global`;
 
   load$ = createEffect(() =>
     this.actions$.pipe(

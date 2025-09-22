@@ -4,13 +4,13 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, mergeMap, of } from 'rxjs';
 import * as OrdersActions from './order.actions';
+import { environment } from '../../../environments/environment';
 
 export class OrdersEffects {
   private actions$ = inject(Actions);
   private http = inject(HttpClient);
 
-  // API root (o'zingiznikiga moslang)
-  private apiUrl = 'https://api.moneychange.uz/api/orders';
+  private apiUrl = `${environment.apiUrl}/api/orders`;
 
   /** Helper: query paramlarni qurish */
   private buildParams(params?: LoadOrdersParams): HttpParams {

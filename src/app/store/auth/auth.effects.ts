@@ -25,6 +25,8 @@ import {
 import { catchError, map, mergeMap, of, tap, withLatestFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectUserId } from './auth.selector';
+import { environment } from '../../../environments/environment';
+import { env } from 'process';
 
 @Injectable()
 export class AuthEffects {
@@ -34,13 +36,11 @@ export class AuthEffects {
   private store = inject(Store);
   private toast = inject(ToastService);
 
-  private baseUrl = 'https://api.moneychange.uz';
-
   login$ = createEffect(() =>
     this.actions$.pipe(
       ofType(login),
       mergeMap(({ phone, password }) =>
-        this.http.post<any>(`${this.baseUrl}/auth/login`, { phone, password }).pipe(
+        this.http.post<any>(`${environment.apiUrl}/auth/login`, { phone, password }).pipe(
           map((res) =>
             loginSuccess({
               access_token: res.access_token,
@@ -57,7 +57,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(loadMe),
       mergeMap(() =>
-        this.http.get<any>(`${this.baseUrl}/auth/me`).pipe(
+        this.http.get<any>(`${environment.apiUrl}/auth/me`).pipe(
           map((res) =>
             loadMeSuccess({
               id: res?.id ?? '',
@@ -79,7 +79,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(register),
       mergeMap((dto) =>
-        this.http.post<any>(`${this.baseUrl}/api/users/register`, dto).pipe(
+        this.http.post<any>(`${environment.apiUrl}/api/users/register`, dto).pipe(
           map((res) => {
             if (!res?.access_token || !res?.refresh_token) {
               throw new Error("Token ma'lumotlari topilmadi");
@@ -106,7 +106,7 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(refresh),
       mergeMap(({ refresh_token }) =>
-        this.http.post<any>(`${this.baseUrl}/auth/refresh`, { refresh_token }).pipe(
+        this.http.post<any>(`${environment.apiUrl}/auth/refresh`, { refresh_token }).pipe(
           map((res) => refreshSuccess(res)),
           catchError((err) => of(refreshFailure({ error: err.error?.message || 'Refresh failed' })))
         )
@@ -132,7 +132,7 @@ export class AuthEffects {
           return of(updateProfileFailure({ error: 'Foydalanuvchi aniqlanmadi' }));
         }
 
-        return this.http.patch<any>(`${this.baseUrl}/api/users/${id}`, profile).pipe(
+        return this.http.patch<any>(`${environment.apiUrl}/api/users/${id}`, profile).pipe(
           map((res) =>
             updateProfileSuccess({
               profile: {
