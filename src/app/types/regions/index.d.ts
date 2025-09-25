@@ -14,8 +14,8 @@ declare interface RegionModel {
   id: string;
   name: string;
 
-  balanceUzs: string;
-  balanceUsd: string;
+  totalBalanceUzs: string;
+  totalBalanceUsd: string;
   balanceIncomeUzs: string;
   balanceIncomeUsd: string;
   balanceExpenseUzs: string;

@@ -48,13 +48,80 @@ export class Home implements OnInit {
     name: this.fb.control('', {
       validators: [Validators.required, Validators.minLength(2)],
     }),
-    balanceUzs: this.fb.control('', { validators: [Validators.required] }),
-    balanceUsd: this.fb.control('', { validators: [Validators.required] }),
     balanceIncomeUzs: this.fb.control('', { validators: [Validators.required] }),
     balanceIncomeUsd: this.fb.control('', { validators: [Validators.required] }),
     balanceExpenseUzs: this.fb.control('', { validators: [Validators.required] }),
     balanceExpenseUsd: this.fb.control('', { validators: [Validators.required] }),
   });
+
+  // Number formatting utilities
+  private formatNumberForDisplay(value: string | number): string {
+    if (!value && value !== 0) return '';
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(numValue)) return '';
+    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  private parseNumberFromDisplay(value: string): string {
+    if (!value) return '';
+    return value.replace(/\s/g, '');
+  }
+
+  // Input handlers for formatted inputs
+  onBalanceIncomeUzsInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.editRegionForm.patchValue({ balanceIncomeUzs: rawValue }, { emitEvent: false });
+  }
+
+  onBalanceIncomeUsdInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.editRegionForm.patchValue({ balanceIncomeUsd: rawValue }, { emitEvent: false });
+  }
+
+  onBalanceExpenseUzsInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.editRegionForm.patchValue({ balanceExpenseUzs: rawValue }, { emitEvent: false });
+  }
+
+  onBalanceExpenseUsdInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.editRegionForm.patchValue({ balanceExpenseUsd: rawValue }, { emitEvent: false });
+  }
+
+  // Method to set formatted values in the form
+  private setFormattedValues() {
+    setTimeout(() => {
+      const incomeUzsInput = document.querySelector('input[name="balanceIncomeUzs"]') as HTMLInputElement;
+      const incomeUsdInput = document.querySelector('input[name="balanceIncomeUsd"]') as HTMLInputElement;
+      const expenseUzsInput = document.querySelector('input[name="balanceExpenseUzs"]') as HTMLInputElement;
+      const expenseUsdInput = document.querySelector('input[name="balanceExpenseUsd"]') as HTMLInputElement;
+
+      if (incomeUzsInput) {
+        incomeUzsInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceIncomeUzs || '');
+      }
+      if (incomeUsdInput) {
+        incomeUsdInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceIncomeUsd || '');
+      }
+      if (expenseUzsInput) {
+        expenseUzsInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceExpenseUzs || '');
+      }
+      if (expenseUsdInput) {
+        expenseUsdInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceExpenseUsd || '');
+      }
+    }, 0);
+  }
 
   isCreateModalOpen = signal(false);
   creatingRegion = signal(false);
@@ -92,8 +159,6 @@ export class Home implements OnInit {
         this.updatingRegion.set(false);
         this.editRegionForm.reset({
           name: '',
-          balanceUzs: '',
-          balanceUsd: '',
           balanceIncomeUzs: '',
           balanceIncomeUsd: '',
           balanceExpenseUzs: '',
@@ -179,8 +244,6 @@ export class Home implements OnInit {
 
     this.editRegionForm.reset({
       name: region?.name ?? '',
-      balanceUzs: this.normalizeMetric(region?.balanceUzs),
-      balanceUsd: this.normalizeMetric(region?.balanceUsd),
       balanceIncomeUzs: this.normalizeMetric(region?.balanceIncomeUzs),
       balanceIncomeUsd: this.normalizeMetric(region?.balanceIncomeUsd),
       balanceExpenseUzs: this.normalizeMetric(region?.balanceExpenseUzs),
@@ -189,6 +252,7 @@ export class Home implements OnInit {
 
     this.editRegionForm.markAsPristine();
     this.editingRegionId.set(region?.id ?? null);
+    this.setFormattedValues();
   }
 
   cancelEditRegion() {
@@ -198,8 +262,6 @@ export class Home implements OnInit {
 
     this.editRegionForm.reset({
       name: '',
-      balanceUzs: '',
-      balanceUsd: '',
       balanceIncomeUzs: '',
       balanceIncomeUsd: '',
       balanceExpenseUzs: '',
@@ -226,8 +288,6 @@ export class Home implements OnInit {
     const raw = this.editRegionForm.getRawValue();
 
     const numericFields: Array<keyof typeof raw> = [
-      'balanceUzs',
-      'balanceUsd',
       'balanceIncomeUzs',
       'balanceIncomeUsd',
       'balanceExpenseUzs',
@@ -264,8 +324,6 @@ export class Home implements OnInit {
 
     const payload: Partial<RegionModel> = {
       name,
-      balanceUzs: Number(raw.balanceUzs).toString(),
-      balanceUsd: Number(raw.balanceUsd).toString(),
       balanceIncomeUzs: Number(raw.balanceIncomeUzs).toString(),
       balanceIncomeUsd: Number(raw.balanceIncomeUsd).toString(),
       balanceExpenseUzs: Number(raw.balanceExpenseUzs).toString(),

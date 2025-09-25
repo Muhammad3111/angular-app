@@ -142,11 +142,12 @@
                 >Kirim (UZS)</label
               >
               <input
-                type="number"
-                formControlName="balanceIncomeUzs"
+                type="text"
+                name="balanceIncomeUzs"
                 class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="0"
                 [disabled]="updatingRegion()"
+                (input)="onBalanceIncomeUzsInput($event)"
               />
             </div>
             <div class="flex flex-col gap-2">
@@ -154,11 +155,12 @@
                 >Kirim (USD)</label
               >
               <input
-                type="number"
-                formControlName="balanceIncomeUsd"
+                type="text"
+                name="balanceIncomeUsd"
                 class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                 placeholder="0"
                 [disabled]="updatingRegion()"
+                (input)="onBalanceIncomeUsdInput($event)"
               />
             </div>
           </div>
@@ -169,11 +171,12 @@
                 >Chiqim (UZS)</label
               >
               <input
-                type="number"
-                formControlName="balanceExpenseUzs"
+                type="text"
+                name="balanceExpenseUzs"
                 class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 placeholder="0"
                 [disabled]="updatingRegion()"
+                (input)="onBalanceExpenseUzsInput($event)"
               />
             </div>
             <div class="flex flex-col gap-2">
@@ -181,41 +184,16 @@
                 >Chiqim (USD)</label
               >
               <input
-                type="number"
-                formControlName="balanceExpenseUsd"
+                type="text"
+                name="balanceExpenseUsd"
                 class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 placeholder="0"
                 [disabled]="updatingRegion()"
+                (input)="onBalanceExpenseUsdInput($event)"
               />
             </div>
           </div>
 
-          <div class="grid gap-4 sm:grid-cols-2">
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-semibold tracking-wide text-blue-600 uppercase"
-                >Balans (UZS)</label
-              >
-              <input
-                type="number"
-                formControlName="balanceUzs"
-                class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="0"
-                [disabled]="updatingRegion()"
-              />
-            </div>
-            <div class="flex flex-col gap-2">
-              <label class="text-xs font-semibold tracking-wide text-blue-600 uppercase"
-                >Balans (USD)</label
-              >
-              <input
-                type="number"
-                formControlName="balanceUsd"
-                class="rounded-lg border border-blue-200 bg-blue-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="0"
-                [disabled]="updatingRegion()"
-              />
-            </div>
-          </div>
 
           <div class="flex justify-end gap-3">
             <button
@@ -312,7 +290,7 @@
                 >Balans (UZS)</span
               >
               <span class="text-lg font-semibold text-blue-700">{{
-                region.balanceUzs | money : 'UZS'
+                region.totalBalanceUzs | money : 'UZS'
               }}</span>
             </div>
             <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
@@ -320,7 +298,7 @@
                 >Balans (USD)</span
               >
               <span class="text-lg font-semibold text-blue-700">{{
-                region.balanceUsd | money : 'USD'
+                region.totalBalanceUsd | money : 'USD'
               }}</span>
             </div>
           </div>

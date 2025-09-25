@@ -20,8 +20,8 @@ type Region = {
   id: string;
   name?: string;
   region?: string;
-  balanceUzs?: string;
-  balanceUsd?: string;
+  totalBalanceUzs?: string;
+  totalBalanceUsd?: string;
   balanceIncomeUzs?: string;
   balanceIncomeUsd?: string;
   balanceExpenseUzs?: string;
@@ -231,34 +231,62 @@ export class Dashboard implements OnInit {
     }
   }
 
-  // —— Input handler’lar —— //
-  setIncomeUzs(v: string) {
+  // —— Number formatting utilities —— //
+  private formatNumberForDisplay(value: string | number): string {
+    if (!value && value !== 0) return '';
+    const numValue = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(numValue)) return '';
+    return numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  private parseNumberFromDisplay(value: string): string {
+    if (!value) return '';
+    return value.replace(/\s/g, '').replace(',', '.');
+  }
+
+  // —— Input handler'lar —— //
+  setIncomeUzs(event: Event) {
     if (!this.selectedIncomeId()) return;
-    this.form.patchValue({ incomeUzs: v === '' ? null : +v }, { emitEvent: false });
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.form.patchValue({ incomeUzs: rawValue === '' ? null : +rawValue }, { emitEvent: false });
     this.computeUzsStatus();
   }
 
-  setIncomeUsd(v: string) {
+  setIncomeUsd(event: Event) {
     if (!this.selectedIncomeId()) return;
-    this.form.patchValue({ incomeUsd: v === '' ? null : +v }, { emitEvent: false });
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.form.patchValue({ incomeUsd: rawValue === '' ? null : +rawValue }, { emitEvent: false });
     this.computeUsdStatus();
   }
 
-  setExpenseUzs(v: string) {
+  setExpenseUzs(event: Event) {
     if (!this.selectedExpenseId()) return;
-    this.form.patchValue({ expenseUzs: v === '' ? null : +v }, { emitEvent: false });
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.form.patchValue({ expenseUzs: rawValue === '' ? null : +rawValue }, { emitEvent: false });
     this.computeUzsStatus();
   }
 
-  setExpenseUsd(v: string) {
+  setExpenseUsd(event: Event) {
     if (!this.selectedExpenseId()) return;
-    this.form.patchValue({ expenseUsd: v === '' ? null : +v }, { emitEvent: false });
+    const input = event.target as HTMLInputElement;
+    const rawValue = this.parseNumberFromDisplay(input.value);
+    const formattedValue = this.formatNumberForDisplay(rawValue);
+    input.value = formattedValue;
+    this.form.patchValue({ expenseUsd: rawValue === '' ? null : +rawValue }, { emitEvent: false });
     this.computeUsdStatus();
   }
 
   cancelIncome() {
     const id = this.selectedIncomeId();
-    if (!id) return;
 
     this.cancelExpense();
     this.selectedIncomeId.set(null);

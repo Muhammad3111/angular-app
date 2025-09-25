@@ -69,19 +69,19 @@
           <div class="flex flex-col gap-2">
             <label class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (UZS)</label>
             <input
-              type="number"
+              type="text"
               placeholder="0"
               class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              (input)="setIncomeUzs($any($event.target).value)"
+              (input)="setIncomeUzs($event)"
             />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-xs font-semibold tracking-wide text-green-600 uppercase">Kirim (USD)</label>
             <input
-              type="number"
+              type="text"
               placeholder="0"
               class="rounded-lg border border-green-200 bg-green-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              (input)="setIncomeUsd($any($event.target).value)"
+              (input)="setIncomeUsd($event)"
             />
           </div>
         </div>
@@ -122,7 +122,7 @@
           </div>
           <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
             <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (UZS)</span>
-            <span class="text-lg font-semibold text-blue-700">{{ r.balanceUzs | money : 'UZS' }}</span>
+            <span class="text-lg font-semibold text-blue-700">{{ r.totalBalanceUzs | money : 'UZS' }}</span>
           </div>
         </div>
 
@@ -133,7 +133,7 @@
           </div>
           <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
             <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Balans (USD)</span>
-            <span class="text-lg font-semibold text-blue-700">{{ r.balanceUsd | money : 'USD' }}</span>
+            <span class="text-lg font-semibold text-blue-700">{{ r.totalBalanceUsd | money : 'USD' }}</span>
           </div>
         </div>
       </div>
@@ -183,19 +183,19 @@
           <div class="flex flex-col gap-2">
             <label class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (UZS)</label>
             <input
-              type="number"
+              type="text"
               placeholder="0"
               class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              (input)="setExpenseUzs($any($event.target).value)"
+              (input)="setExpenseUzs($event)"
             />
           </div>
           <div class="flex flex-col gap-2">
             <label class="text-xs font-semibold tracking-wide text-red-600 uppercase">Chiqim (USD)</label>
             <input
-              type="number"
+              type="text"
               placeholder="0"
               class="rounded-lg border border-red-200 bg-red-50 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              (input)="setExpenseUsd($any($event.target).value)"
+              (input)="setExpenseUsd($event)"
             />
           </div>
         </div>
@@ -243,11 +243,11 @@
         <div class="grid gap-4 sm:grid-cols-2">
           <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
             <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Umumiy balans (UZS)</span>
-            <span class="text-lg font-semibold text-blue-700">{{ r.balanceUzs | money : 'UZS' }}</span>
+            <span class="text-lg font-semibold text-blue-700">{{ r.totalBalanceUzs | money : 'UZS' }}</span>
           </div>
           <div class="p-4 border border-blue-200 rounded-xl bg-blue-50 flex flex-col gap-1">
             <span class="text-xs font-semibold tracking-wide text-blue-600 uppercase">Umumiy balans (USD)</span>
-            <span class="text-lg font-semibold text-blue-700">{{ r.balanceUsd | money : 'USD' }}</span>
+            <span class="text-lg font-semibold text-blue-700">{{ r.totalBalanceUsd | money : 'USD' }}</span>
           </div>
         </div>
       </div>

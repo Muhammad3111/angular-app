@@ -6,8 +6,8 @@ declare interface RegionBrief {
   name: string;
 
   // Backendda string sifatida keladi:
-  balanceUzs: string; // "4700000.00"
-  balanceUsd: string; // "-1030.00"
+  totalBalanceUzs: string; // "4700000.00"
+  totalBalanceUsd: string; // "-1030.00"
   balanceIncomeUzs: string; // "11500000.00"
   balanceIncomeUsd: string; // "750.00"
   balanceExpenseUzs: string; // "4800000.00"
