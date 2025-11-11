@@ -27,7 +27,7 @@
     <div class="text-red-600">{{ error$ | async }}</div>
   } @else {
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      @for (r of regions$ | async; track r.id) { @if (!selectedIncomeId() || selectedIncomeId() ===
+      @for (r of regions$(); track r.id) { @if (!selectedIncomeId() || selectedIncomeId() ===
       r.id) {
     <div
       class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6"
@@ -114,7 +114,7 @@
           <button
             type="button"
             class="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold uppercase tracking-wide hover:bg-indigo-700 transition"
-            (click)="selectIncomeRegion(r.id)"
+            (click)="selectIncomeRegion(r.id, r)"
           >
             Tanlash
           </button>
@@ -193,7 +193,7 @@
     </div>
   } @else {
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      @for (r of regions$ | async; track r.id) { @if (!selectedExpenseId() || selectedExpenseId() ===
+      @for (r of regions$(); track r.id) { @if (!selectedExpenseId() || selectedExpenseId() ===
       r.id) {
     <div
       class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6"
@@ -263,7 +263,7 @@
           <button
             type="button"
             class="px-3 py-1.5 rounded-lg bg-rose-500 text-white text-xs font-semibold uppercase tracking-wide hover:bg-rose-600 transition"
-            (click)="selectExpenseRegion(r.id)"
+            (click)="selectExpenseRegion(r.id, r)"
           >
             Tanlash
           </button>

@@ -57,12 +57,12 @@ export const regionsReducer = createReducer(
   // Update
   on(RegionsActions.updateRegionSuccess, (state, { region }) => ({
     ...state,
-    regions: state.regions.map((r) => (r.id === region.id ? region : r)),
+    regions: state.regions.map((r: any) => (r.id === region.id ? region : r)),
   })),
 
   // Delete
   on(RegionsActions.deleteRegionSuccess, (state, { id }) => ({
     ...state,
-    regions: state.regions.filter((r) => r.id !== id),
+    regions: state.regions.filter((r: any) => r.id !== id),
   }))
 );

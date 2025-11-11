@@ -163,7 +163,8 @@ export class Home implements OnInit {
   updatingRegion = signal(false);
 
   ngOnInit(): void {
-    // Sahifaga kirilganda faqat bir marta chaqiramiz
+    // Sahifaga kirilganda cache'dan yuklanadi (agar cache valid bo'lsa)
+    // force: true qo'shsangiz, cache'ni ignore qiladi
     this.loadRegions();
     this.store.dispatch(AnalyticsActions.loadAnalytics());
 
@@ -174,6 +175,9 @@ export class Home implements OnInit {
         this.isCreateModalOpen.set(false);
         this.createRegionForm.reset({ name: '' });
         this.store.dispatch(AnalyticsActions.loadAnalytics());
+        this.store.dispatch(
+          RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit })
+        );
         this.toast.show('success', `${region?.name ?? 'Viloyat'} qo'shildi`);
       });
 
@@ -211,9 +215,13 @@ export class Home implements OnInit {
 
     this.actions$
       .pipe(ofType(RegionsActions.deleteRegionSuccess), takeUntilDestroyed(this.destroyRef))
-      .subscribe(({ id }) => {
+      .subscribe(() => {
         this.closeDelete();
-        this.toast.show('success', `Viloyat o'chirildi`);
+        this.store.dispatch(AnalyticsActions.loadAnalytics());
+        this.store.dispatch(
+          RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit })
+        );
+        this.toast.show('success', "Viloyat o'chirildi");
       });
 
     this.actions$

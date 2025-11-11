@@ -53,7 +53,7 @@ export class Dashboard implements OnInit {
   readonly MAX_UZS_DIFF = 5_000_000; // (incomeUzs - expenseUzs) > 5M  => juda katta
 
   // Store selectors
-  regions$ = this.store.select(selectAllRegions);
+  private storeRegions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
   error$ = this.store.select(selectRegionsError);
   currentPage$ = this.store.select(selectRegionsPage);
@@ -66,6 +66,28 @@ export class Dashboard implements OnInit {
   firstStep = signal<'income' | 'expense' | null>(null);
   selectedIncomeId = signal<string | null>(null);
   selectedExpenseId = signal<string | null>(null);
+  
+  // Tanlangan viloyatlarni saqlab qolish
+  selectedIncomeRegion = signal<any | null>(null);
+  selectedExpenseRegion = signal<any | null>(null);
+  
+  // Tanlangan viloyat bilan birga barcha viloyatlarni ko'rsatish
+  regions$ = toSignal(
+    this.storeRegions$.pipe(
+      map(regions => {
+        const selected = this.selectedIncomeRegion();
+        if (!selected) return regions;
+        
+        // Agar tanlangan viloyat listda bo'lmasa, uni qo'shamiz
+        const exists = regions.some((r: any) => r.id === selected.id);
+        if (!exists) {
+          return [selected, ...regions];
+        }
+        return regions;
+      })
+    ),
+    { initialValue: [] }
+  );
 
   // Mapping: from = CHIQIM, to = KIRIM
   fromRegionId = signal<string | null>(null);
@@ -195,8 +217,11 @@ export class Dashboard implements OnInit {
   }
 
   // —— Tanlash —— //
-  selectIncomeRegion(id: string) {
+  selectIncomeRegion(id: string, region?: any) {
     this.selectedIncomeId.set(id);
+    if (region) {
+      this.selectedIncomeRegion.set(region);
+    }
     if (!this.firstStep()) this.firstStep.set('income');
     this.toRegionId.set(id);
   }
@@ -217,8 +242,11 @@ export class Dashboard implements OnInit {
     }
   }
 
-  selectExpenseRegion(id: string) {
+  selectExpenseRegion(id: string, region?: any) {
     this.selectedExpenseId.set(id);
+    if (region) {
+      this.selectedExpenseRegion.set(region);
+    }
     if (!this.firstStep()) this.firstStep.set('expense');
     this.fromRegionId.set(id);
   }
