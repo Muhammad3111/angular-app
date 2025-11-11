@@ -1,5 +1,10 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { selectAllRegions, selectRegionsLoading } from '../../store/regions/region.selectors';
+import {
+  selectAllRegions,
+  selectRegionsLoading,
+  selectRegionsPage,
+  selectRegionsTotalPages,
+} from '../../store/regions/region.selectors';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -15,10 +20,18 @@ import {
 import { Actions, ofType } from '@ngrx/effects';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from '../../shared/toast.service';
+import { SkeletonLoaderComponent } from '../../shared/skeleton-loader/skeleton-loader';
 
 @Component({
   selector: 'app-home',
-  imports: [AsyncPipe, CommonModule, FontAwesomeModule, MoneyPipe, ReactiveFormsModule],
+  imports: [
+    AsyncPipe,
+    CommonModule,
+    FontAwesomeModule,
+    MoneyPipe,
+    ReactiveFormsModule,
+    SkeletonLoaderComponent,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -33,10 +46,15 @@ export class Home implements OnInit {
 
   regions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
+  currentPage$ = this.store.select(selectRegionsPage);
+  totalPages$ = this.store.select(selectRegionsTotalPages);
 
   analytics$ = this.store.select(selectAnalytics);
   analyticsLoading$ = this.store.select(selectAnalyticsLoading);
   analyticsError$ = this.store.select(selectAnalyticsError);
+
+  currentPage = 1;
+  limit = 9;
 
   createRegionForm = this.fb.group({
     name: this.fb.control('', {
@@ -103,22 +121,38 @@ export class Home implements OnInit {
   // Method to set formatted values in the form
   private setFormattedValues() {
     setTimeout(() => {
-      const incomeUzsInput = document.querySelector('input[name="balanceIncomeUzs"]') as HTMLInputElement;
-      const incomeUsdInput = document.querySelector('input[name="balanceIncomeUsd"]') as HTMLInputElement;
-      const expenseUzsInput = document.querySelector('input[name="balanceExpenseUzs"]') as HTMLInputElement;
-      const expenseUsdInput = document.querySelector('input[name="balanceExpenseUsd"]') as HTMLInputElement;
+      const incomeUzsInput = document.querySelector(
+        'input[name="balanceIncomeUzs"]'
+      ) as HTMLInputElement;
+      const incomeUsdInput = document.querySelector(
+        'input[name="balanceIncomeUsd"]'
+      ) as HTMLInputElement;
+      const expenseUzsInput = document.querySelector(
+        'input[name="balanceExpenseUzs"]'
+      ) as HTMLInputElement;
+      const expenseUsdInput = document.querySelector(
+        'input[name="balanceExpenseUsd"]'
+      ) as HTMLInputElement;
 
       if (incomeUzsInput) {
-        incomeUzsInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceIncomeUzs || '');
+        incomeUzsInput.value = this.formatNumberForDisplay(
+          this.editRegionForm.value.balanceIncomeUzs || ''
+        );
       }
       if (incomeUsdInput) {
-        incomeUsdInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceIncomeUsd || '');
+        incomeUsdInput.value = this.formatNumberForDisplay(
+          this.editRegionForm.value.balanceIncomeUsd || ''
+        );
       }
       if (expenseUzsInput) {
-        expenseUzsInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceExpenseUzs || '');
+        expenseUzsInput.value = this.formatNumberForDisplay(
+          this.editRegionForm.value.balanceExpenseUzs || ''
+        );
       }
       if (expenseUsdInput) {
-        expenseUsdInput.value = this.formatNumberForDisplay(this.editRegionForm.value.balanceExpenseUsd || '');
+        expenseUsdInput.value = this.formatNumberForDisplay(
+          this.editRegionForm.value.balanceExpenseUsd || ''
+        );
       }
     }, 0);
   }
@@ -130,7 +164,7 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     // Sahifaga kirilganda faqat bir marta chaqiramiz
-    this.store.dispatch(RegionsActions.loadRegions());
+    this.loadRegions();
     this.store.dispatch(AnalyticsActions.loadAnalytics());
 
     this.actions$
@@ -350,5 +384,34 @@ export class Home implements OnInit {
       return Number.isFinite(numeric) ? numeric.toString() : trimmed;
     }
     return '';
+  }
+
+  // Pagination methods
+  loadRegions() {
+    this.store.dispatch(RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit }));
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.loadRegions();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  nextPage() {
+    this.currentPage++;
+    this.loadRegions();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadRegions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  get skeletonArray() {
+    return Array(this.limit).fill(0);
   }
 }

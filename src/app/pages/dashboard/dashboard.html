@@ -8,11 +8,7 @@
 >
   {{ toast()!.text }}
 </div>
-} @if (loading$ | async) {
-<div>Loading...</div>
-} @else if (error$ | async) {
-<div class="text-red-600">{{ error$ | async }}</div>
-} @else {
+}
 
 <!-- KIRIM QATORI -->
 <div class="mb-8">
@@ -21,9 +17,18 @@
     <span class="text-sm text-gray-500 hidden sm:block">Kartalar orasida Tab bilan yurib, Enter bilan tanlang</span>
   </div>
 
-  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (r of regions$ | async; track r.id) { @if (!selectedIncomeId() || selectedIncomeId() ===
-    r.id) {
+  @if (loading$ | async) {
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (item of skeletonArray; track $index) {
+        <app-skeleton-loader type="region-card"></app-skeleton-loader>
+      }
+    </div>
+  } @else if (error$ | async) {
+    <div class="text-red-600">{{ error$ | async }}</div>
+  } @else {
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (r of regions$ | async; track r.id) { @if (!selectedIncomeId() || selectedIncomeId() ===
+      r.id) {
     <div
       class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6"
       [ngClass]="{ 'ring-2 ring-indigo-500 border-indigo-200': selectedIncomeId() === r.id }"
@@ -140,11 +145,39 @@
       }
     </div>
     } }
-  </div>
+    </div>
+  }
+
+  <!-- Pagination for Income -->
+  @if (!(loading$ | async) && (totalPages$ | async)! > 1 && !selectedIncomeId()) {
+    <div class="flex items-center justify-between mt-6 px-4 py-3 bg-white rounded-lg shadow border border-gray-200">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          [disabled]="(currentPage$ | async) === 1"
+          (click)="prevPage()"
+        >
+          ← Oldingi
+        </button>
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          [disabled]="(currentPage$ | async) === (totalPages$ | async)"
+          (click)="nextPage()"
+        >
+          Keyingi →
+        </button>
+      </div>
+      <div class="text-sm text-gray-600">
+        Sahifa <span class="font-semibold">{{ currentPage$ | async }}</span> /
+        <span class="font-semibold">{{ totalPages$ | async }}</span>
+      </div>
+    </div>
+  }
 </div>
 
 <!-- CHIQIM QATORI -->
-@if (selectedIncomeId()) {
 @if (selectedIncomeId()) {
 <div class="mb-8">
   <div class="flex items-center justify-between mb-4">
@@ -152,9 +185,16 @@
     <span class="text-sm text-gray-500 hidden sm:block">Tab bilan yurib, Enter bilan tanlang</span>
   </div>
 
-  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    @for (r of regions$ | async; track r.id) { @if (!selectedExpenseId() || selectedExpenseId() ===
-    r.id) {
+  @if (loading$ | async) {
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (item of skeletonArray; track $index) {
+        <app-skeleton-loader type="region-card"></app-skeleton-loader>
+      }
+    </div>
+  } @else {
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (r of regions$ | async; track r.id) { @if (!selectedExpenseId() || selectedExpenseId() ===
+      r.id) {
     <div
       class="bg-white shadow-2xl rounded-3xl border border-gray-200 p-6"
       [ngClass]="{ 'ring-2 ring-rose-500 border-rose-200': selectedExpenseId() === r.id }"
@@ -254,9 +294,37 @@
       }
     </div>
     } }
-  </div>
+    </div>
+  }
+
+  <!-- Pagination for Expense -->
+  @if (!(loading$ | async) && (totalPages$ | async)! > 1 && !selectedExpenseId()) {
+    <div class="flex items-center justify-between mt-6 px-4 py-3 bg-white rounded-lg shadow border border-gray-200">
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          [disabled]="(currentPage$ | async) === 1"
+          (click)="prevPage()"
+        >
+          ← Oldingi
+        </button>
+        <button
+          type="button"
+          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          [disabled]="(currentPage$ | async) === (totalPages$ | async)"
+          (click)="nextPage()"
+        >
+          Keyingi →
+        </button>
+      </div>
+      <div class="text-sm text-gray-600">
+        Sahifa <span class="font-semibold">{{ currentPage$ | async }}</span> /
+        <span class="font-semibold">{{ totalPages$ | async }}</span>
+      </div>
+    </div>
+  }
 </div>
-}
 }
 
 <!-- AKSIYALAR -->
@@ -280,4 +348,4 @@
     </button>
   </div>
 </div>
-} }
+}

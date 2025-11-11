@@ -8,3 +8,11 @@ export const selectAllRegions = createSelector(selectRegionsState, (state) => st
 export const selectRegionsLoading = createSelector(selectRegionsState, (state) => state.loading);
 
 export const selectRegionsError = createSelector(selectRegionsState, (state) => state.error);
+
+export const selectRegionsTotal = createSelector(selectRegionsState, (state) => state.total);
+
+export const selectRegionsPage = createSelector(selectRegionsState, (state) => state.page);
+
+export const selectRegionsLimit = createSelector(selectRegionsState, (state) => state.limit);
+
+export const selectRegionsTotalPages = createSelector(selectRegionsState, (state) => state.totalPages);

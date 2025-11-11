@@ -5,6 +5,10 @@ export interface RegionsState {
   regions: any[];
   loading: boolean;
   error: string | null;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 
   stats: any[];
   statsLoading: boolean;
@@ -15,6 +19,10 @@ export const initialState: RegionsState = {
   regions: [],
   loading: false,
   error: null,
+  total: 0,
+  page: 1,
+  limit: 10,
+  totalPages: 0,
 
   stats: [],
   statsLoading: false,
@@ -25,10 +33,14 @@ export const regionsReducer = createReducer(
   initialState,
   // Load
   on(RegionsActions.loadRegions, (state) => ({ ...state, loading: true })),
-  on(RegionsActions.loadRegionsSuccess, (state, { regions }) => ({
+  on(RegionsActions.loadRegionsSuccess, (state, { data, total, page, limit, totalPages }) => ({
     ...state,
     loading: false,
-    regions,
+    regions: data,
+    total,
+    page,
+    limit,
+    totalPages,
   })),
   on(RegionsActions.loadRegionsFailure, (state, { error }) => ({
     ...state,

@@ -1,10 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 
 // Load
-export const loadRegions = createAction('[Regions] Load Regions');
+export const loadRegions = createAction(
+  '[Regions] Load Regions',
+  props<{ page?: number; limit?: number }>()
+);
 export const loadRegionsSuccess = createAction(
   '[Regions] Load Regions Success',
-  props<{ regions: RegionModel[] }>()
+  props<{ data: RegionModel[]; total: number; page: number; limit: number; totalPages: number }>()
 );
 export const loadRegionsFailure = createAction(
   '[Regions] Load Regions Failure',

@@ -11,10 +11,13 @@ import {
   selectAllRegions,
   selectRegionsLoading,
   selectRegionsError,
+  selectRegionsPage,
+  selectRegionsTotalPages,
 } from '../../store/regions/region.selectors';
 
 import * as OrdersActions from '../../store/orders/order.actions';
 import { MoneyPipe } from '../../shared/money.pipe';
+import { SkeletonLoaderComponent } from '../../shared/skeleton-loader/skeleton-loader';
 
 type Region = {
   id: string;
@@ -31,7 +34,7 @@ type Region = {
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, AsyncPipe, MoneyPipe],
+  imports: [CommonModule, ReactiveFormsModule, AsyncPipe, MoneyPipe, SkeletonLoaderComponent],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css'],
 })
@@ -53,6 +56,11 @@ export class Dashboard implements OnInit {
   regions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
   error$ = this.store.select(selectRegionsError);
+  currentPage$ = this.store.select(selectRegionsPage);
+  totalPages$ = this.store.select(selectRegionsTotalPages);
+
+  currentPage = 1;
+  limit = 8;
 
   // Tanlov holati
   firstStep = signal<'income' | 'expense' | null>(null);
@@ -95,7 +103,7 @@ export class Dashboard implements OnInit {
 
   ngOnInit(): void {
     // Sahifa ochilganda regionlar
-    this.store.dispatch(RegionsActions.loadRegions());
+    this.loadRegions();
 
     // Phone UI -> normalize (phone)
     this.form.controls.phoneDisplay.valueChanges
@@ -115,7 +123,7 @@ export class Dashboard implements OnInit {
       .pipe(ofType(OrdersActions.createOrderSuccess), takeUntilDestroyed(this.destroyRef))
       .subscribe(() => {
         this.showToast('success', 'Buyurtma yaratildi!');
-        this.store.dispatch(RegionsActions.loadRegions()); // balanslarni yangilash
+        this.loadRegions(); // balanslarni yangilash
         this.resetAll();
       });
 
@@ -354,5 +362,34 @@ export class Dashboard implements OnInit {
     };
 
     this.store.dispatch(OrdersActions.createOrder({ dto }));
+  }
+
+  // Pagination methods
+  loadRegions() {
+    this.store.dispatch(RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit }));
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.loadRegions();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  nextPage() {
+    this.currentPage++;
+    this.loadRegions();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadRegions();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  get skeletonArray() {
+    return Array(this.limit).fill(0);
   }
 }

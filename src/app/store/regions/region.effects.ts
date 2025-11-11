@@ -13,9 +13,37 @@ export class RegionsEffects {
   load$ = createEffect(() =>
     this.actions$.pipe(
       ofType(RegionsActions.loadRegions),
-      mergeMap(() =>
-        this.http.get<any[]>(this.apiUrl).pipe(
-          map((data) => RegionsActions.loadRegionsSuccess({ regions: data })),
+      mergeMap(({ page = 1, limit = 10 }) =>
+        this.http.get<any>(this.apiUrl).pipe(
+          map((response) => {
+            // Agar backend pagination qo'llab-quvvatlasa
+            if (response.data && Array.isArray(response.data)) {
+              return RegionsActions.loadRegionsSuccess({
+                data: response.data,
+                total: response.total || response.data.length,
+                page: response.page || page,
+                limit: response.limit || limit,
+                totalPages: response.totalPages || Math.ceil((response.total || response.data.length) / limit)
+              });
+            }
+            // Agar backend oddiy array qaytarsa (pagination yo'q)
+            else if (Array.isArray(response)) {
+              // Frontend'da pagination qilamiz
+              const startIndex = (page - 1) * limit;
+              const endIndex = startIndex + limit;
+              const paginatedData = response.slice(startIndex, endIndex);
+              
+              return RegionsActions.loadRegionsSuccess({
+                data: paginatedData,
+                total: response.length,
+                page: page,
+                limit: limit,
+                totalPages: Math.ceil(response.length / limit)
+              });
+            }
+            // Noma'lum format
+            return RegionsActions.loadRegionsFailure({ error: 'Invalid response format' });
+          }),
           catchError((err) => of(RegionsActions.loadRegionsFailure({ error: err.message })))
         )
       )
