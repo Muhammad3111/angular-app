@@ -2,8 +2,6 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import {
   selectAllRegions,
   selectRegionsLoading,
-  selectRegionsPage,
-  selectRegionsTotalPages,
 } from '../../store/regions/region.selectors';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -46,15 +44,10 @@ export class Home implements OnInit {
 
   regions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
-  currentPage$ = this.store.select(selectRegionsPage);
-  totalPages$ = this.store.select(selectRegionsTotalPages);
 
   analytics$ = this.store.select(selectAnalytics);
   analyticsLoading$ = this.store.select(selectAnalyticsLoading);
   analyticsError$ = this.store.select(selectAnalyticsError);
-
-  currentPage = 1;
-  limit = 9;
 
   createRegionForm = this.fb.group({
     name: this.fb.control('', {
@@ -175,9 +168,7 @@ export class Home implements OnInit {
         this.isCreateModalOpen.set(false);
         this.createRegionForm.reset({ name: '' });
         this.store.dispatch(AnalyticsActions.loadAnalytics());
-        this.store.dispatch(
-          RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit })
-        );
+        this.loadRegions();
         this.toast.show('success', `${region?.name ?? 'Viloyat'} qo'shildi`);
       });
 
@@ -218,9 +209,7 @@ export class Home implements OnInit {
       .subscribe(() => {
         this.closeDelete();
         this.store.dispatch(AnalyticsActions.loadAnalytics());
-        this.store.dispatch(
-          RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit })
-        );
+        this.loadRegions();
         this.toast.show('success', "Viloyat o'chirildi");
       });
 
@@ -394,32 +383,12 @@ export class Home implements OnInit {
     return '';
   }
 
-  // Pagination methods
+  // Load all regions without pagination
   loadRegions() {
-    this.store.dispatch(RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit }));
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-    this.loadRegions();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  nextPage() {
-    this.currentPage++;
-    this.loadRegions();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadRegions();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    this.store.dispatch(RegionsActions.loadRegions({ page: 1, limit: 1000 }));
   }
 
   get skeletonArray() {
-    return Array(this.limit).fill(0);
+    return Array(9).fill(0);
   }
 }

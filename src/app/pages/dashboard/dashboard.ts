@@ -11,8 +11,6 @@ import {
   selectAllRegions,
   selectRegionsLoading,
   selectRegionsError,
-  selectRegionsPage,
-  selectRegionsTotalPages,
 } from '../../store/regions/region.selectors';
 
 import * as OrdersActions from '../../store/orders/order.actions';
@@ -56,11 +54,6 @@ export class Dashboard implements OnInit {
   private storeRegions$ = this.store.select(selectAllRegions);
   loading$ = this.store.select(selectRegionsLoading);
   error$ = this.store.select(selectRegionsError);
-  currentPage$ = this.store.select(selectRegionsPage);
-  totalPages$ = this.store.select(selectRegionsTotalPages);
-
-  currentPage = 1;
-  limit = 8;
 
   // Tanlov holati
   firstStep = signal<'income' | 'expense' | null>(null);
@@ -392,32 +385,12 @@ export class Dashboard implements OnInit {
     this.store.dispatch(OrdersActions.createOrder({ dto }));
   }
 
-  // Pagination methods
+  // Load all regions without pagination
   loadRegions() {
-    this.store.dispatch(RegionsActions.loadRegions({ page: this.currentPage, limit: this.limit }));
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-    this.loadRegions();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  nextPage() {
-    this.currentPage++;
-    this.loadRegions();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadRegions();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    this.store.dispatch(RegionsActions.loadRegions({ page: 1, limit: 1000 }));
   }
 
   get skeletonArray() {
-    return Array(this.limit).fill(0);
+    return Array(8).fill(0);
   }
 }
