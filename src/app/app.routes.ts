@@ -7,6 +7,7 @@ import { Login } from './pages/login/login';
 import { Layout } from './layout/layout';
 import { authChildGuard, authGuard, roleGuard } from './shared/guards/auth.guard';
 import { Profile } from './profile/profile';
+import { UsersPage } from './pages/users/users';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -40,6 +41,12 @@ export const routes: Routes = [
       {
         path: 'profile',
         component: Profile,
+        canActivate: [roleGuard],
+        data: { roles: ['admin'] },
+      },
+      {
+        path: 'users',
+        component: UsersPage,
         canActivate: [roleGuard],
         data: { roles: ['admin'] },
       },

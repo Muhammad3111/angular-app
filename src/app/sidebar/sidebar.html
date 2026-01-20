@@ -36,6 +36,16 @@
       <fa-icon [icon]="faClipboard"></fa-icon>
       <span *ngIf="!collapsed">Kirim-Chiqimlar</span>
     </li>
+
+    <li
+      *ngIf="(role$ | async) === 'admin'"
+      routerLink="/users"
+      routerLinkActive="active-link"
+      class="cursor-pointer hover:bg-green-300 py-2 px-4 rounded-full flex gap-4 items-center mb-1"
+    >
+      <fa-icon [icon]="faUsers"></fa-icon>
+      <span *ngIf="!collapsed">Foydalanuvchilar</span>
+    </li>
     <!-- <li
       routerLink="/settings"
       routerLinkActive="active-link"

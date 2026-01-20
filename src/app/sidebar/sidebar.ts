@@ -1,7 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faGrip, faHouse, faClipboard, faLeaf, faGear } from '@fortawesome/free-solid-svg-icons';
+import {
+  faGrip,
+  faHouse,
+  faClipboard,
+  faLeaf,
+  faGear,
+  faUsers,
+} from '@fortawesome/free-solid-svg-icons';
 import { SidebarService } from './sidebar.service';
 import { CommonModule } from '@angular/common';
 import { Store } from '@ngrx/store';
@@ -20,6 +27,7 @@ export class Sidebar {
   faGrip = faGrip;
   faLeaf = faLeaf;
   faSettings = faGear;
+  faUsers = faUsers;
   sidebarService = inject(SidebarService);
   private store = inject(Store);
 

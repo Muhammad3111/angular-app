@@ -20,6 +20,8 @@ import { AnalyticsEffects } from './store/analytics/analytics.effects';
 import { authReducer } from './store/auth/auth.reducer';
 import { AuthEffects } from './store/auth/auth.effects';
 import { authInterceptor } from './store/auth/auth.interceptor';
+import { usersReducer } from './store/users/users.reducer';
+import { UsersEffects } from './store/users/users.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,9 +34,10 @@ export const appConfig: ApplicationConfig = {
       orders: ordersReducer,
       analytics: analyticsReducer,
       auth: authReducer,
+      users: usersReducer,
     }),
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
-    provideEffects([RegionsEffects, OrdersEffects, AnalyticsEffects, AuthEffects]),
+    provideEffects([RegionsEffects, OrdersEffects, AnalyticsEffects, AuthEffects, UsersEffects]),
     provideStoreDevtools({ maxAge: 25 }),
   ],
 };
