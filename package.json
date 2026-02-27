@@ -3,11 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "node dist/exchange-app/server/server.mjs",
+    "start:dev": "ng serve --configuration development",
+    "start:prod": "node dist/exchange-app/server/server.mjs",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:exchange-app": "node dist/exchange-app/server/server.mjs"
+    "serve:ssr:exchange-app": "node dist/exchange-app/server/server.mjs",
+    "pm2:start": "pm2 start ecosystem.config.cjs --env production --only exchange-app",
+    "pm2:restart": "pm2 restart ecosystem.config.cjs --env production --only exchange-app --update-env",
+    "pm2:stop": "pm2 stop exchange-app",
+    "pm2:delete": "pm2 delete exchange-app",
+    "pm2:logs": "pm2 logs exchange-app"
   },
   "prettier": {
     "printWidth": 100,
@@ -23,7 +30,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^20.3.0",
+    "@angular/animations": "20.2.3",
     "@angular/common": "^20.2.0",
     "@angular/compiler": "^20.2.0",
     "@angular/core": "^20.2.0",
